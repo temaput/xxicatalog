@@ -1,4 +1,6 @@
+import os
 from django.db import models
+from django.conf import settings
 from treebeard.mp_tree import MP_Node
 
 # Create your models here.
@@ -68,12 +70,27 @@ class Book(models.Model):
         blank=True,
         upload_to='book_covers'
     )
+    book_id = models.PositiveIntegerField(
+        "Идентификатор книги на сайте",
+        blank=True,
+        null=True
+    )
 
     category = models.ForeignKey(
         Category,
         related_name='books',
         verbose_name='Рубрика'
     )
+
+    @property
+    def full_url(self):
+        classica_site = settings.CLASSICA_SITE_URL
+        bid = str(self.book_id)
+        if self.folders.exists():
+            folder_url = self.folders.first().full_url
+            return os.path.join(folder_url, bid)
+        else:
+            return os.path.join(classica_site, bid)
 
     def __str__(self):
         return "%s. %s" % (self.title, self.subtitle)
@@ -89,6 +106,11 @@ class Folder(models.Model):
         max_length=100
     )
     books = models.ManyToManyField(Book, "folders")
+
+    @property
+    def full_url(self):
+        classica_site = settings.CLASSICA_SITE_URL
+        return os.path.join(classica_site, self.url)
 
     def __str__(self):
         return "Папка на сайте %s" % self.title

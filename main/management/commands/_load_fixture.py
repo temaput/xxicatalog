@@ -88,11 +88,12 @@ def get_book_dict(el):
         ('город', 'city'),
         ('издательство', 'publisher'),
         ('book_description', 'book_description'),
+        ('book_id', 'book_id'),
     )
     d = {}
     for tagname, key in fnames:
         tag = el.find(tagname)
-        if tag is not None:
+        if tag is not None and tag.text is not None:
             text = tag.text.strip()
             if len(text):
                 d[key] = text
@@ -104,7 +105,7 @@ def get_book_cover(el):
     covers_upload_to = 'book_covers'
     covers_dir = join(settings.MEDIA_ROOT, covers_upload_to)
     cover_tag = el.find('book_bpic')
-    if cover_tag is not None:
+    if cover_tag is not None and cover_tag.text is not None:
         cover_fname = cover_tag.text.strip()
         if len(cover_fname):
             cover_file_path = join(covers_dir, cover_fname)
