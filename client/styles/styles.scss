@@ -1,0 +1,108 @@
+@import "~material-design-lite/src/material-design-lite.scss";
+@import "~material-design-lite/src/_variables.scss";
+
+$content-width: 1280px;
+
+html, body {
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.main-content {
+  max-width: $content-width;
+  margin: 0 auto;
+}
+.rich-text__container {
+  p {
+    font: inherit;
+    color: inherit;
+  }
+}
+.book-list > div {
+  //react-list root
+  @extend .mdl-grid
+}
+.book-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-page__breadcrumbs {
+  padding: 12px 0 12px 16px;
+  a {
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+  }
+}
+.mdl-card__title {
+  @extend .mdl-card__title;
+  display: block;
+}
+.book-list__cover {
+  width: 100%
+}
+.book-list__title {
+  flex-grow: 1
+}
+.book-list__title-text {
+  padding-bottom: 12px
+}
+
+.horizontal-card {
+  @extend .mdl-card;
+  width: 100%;
+  display: block;
+}
+.horizontal-card__row{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.horizontal-card__title {
+  
+  padding: 20px;
+  display: block;
+}
+
+.horizontal-card__media {
+
+  flex: 0 0 25%;
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+.horizontal-card__title-text {
+  @extend .mdl-card__title-text; 
+  padding-bottom: 12px;
+}
+
+@media (max-width: $grid-tablet-breakpoint - 1) {
+  .horizontal-card__media {
+    flex: 0 0 30%;
+    padding: 10px 0 10px 10px;
+  }
+  .horizontal-card__title {
+
+    padding: 10px;
+    display: block;
+  }
+  .horizontal-card__title-text {
+    font-size: 20px;
+  }
+
+  .book-list__cover {
+    width: 50%;
+  }
+}
+
+@media (min-width: $grid-desktop-breakpoint + 1) and (max-width: $content-width - 10) {
+  .horizontal-card__media {
+    flex: 0 0 35%;
+    padding: 20px 0 20px 20px;
+  }
+}
+
