@@ -1,8 +1,8 @@
 import React from 'react';
 import Relay from 'react-relay';
 import classNames from 'classnames';
-import ReactList from 'react-list';
 import Waypoint from 'react-waypoint';
+import {Link} from 'react-router';
 
 
 
@@ -27,11 +27,11 @@ class Book extends React.Component {
               </div>
             </div>
             <div className="mdl-card__actions mdl-card--border">
-              <a
-               onTouchTap={this.openBook} 
+              <Link 
+                to={"/book-page/" + this.props.bookNode.id}
                 className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
                 Подробнее
-              </a>
+              </Link>
             </div>
           </div>
         </article>
@@ -107,6 +107,7 @@ class BookList extends React.Component {
   state = {
     isLoading: false,
   }
+
   openBook() {
     this.props.relay.setVariables({first:100})
   }
