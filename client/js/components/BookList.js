@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import classNames from 'classnames';
 import ReactList from 'react-list';
+import Waypoint from 'react-waypoint';
 
 
 
@@ -104,35 +105,37 @@ const BookContainer = Relay.createContainer(Book, {
 const bookListSize = 10;
 class BookList extends React.Component {
   state = {
-    listExpansionActive: false,
-    lastListSize: bookListSize
+    isLoading: false,
   }
   openBook() {
     this.props.relay.setVariables({first:100})
   }
 
 
-  renderItem(index, key) {
-    const books = this.props.catalog.allBooks.edges;
-    if (books.length !== this.state.lastListSize) {
-      this.setState({
-        listExpansionActive: false,
-        lastListSize: books.length,
-      });
-    }
-    if (!this.state.listExpansionActive && 
-      books.length - index < 3) {
-        this.setState({
-          lastListSize: books.length,
-          listExpansionActive: true,
-        });
-        this.props.relay.setVariables({
-          first: this.props.relay.variables.first + bookListSize
-        });
-    }
-    const bookNode = books[index].node;
-    console.log(index, key);
-    return <BookContainer bookNode={bookNode} key={bookNode.id} handleBookOpen={this.openBook.bind(this)}/>
+  loadMoreItems() {
+    this.props.relay.setVariables({
+      first: this.props.relay.variables.first + bookListSize
+    })
+  }
+
+  renderList() {
+    return this.props.catalog.allBooks.edges.map(
+      (book) => (
+        <BookContainer 
+          bookNode={book.node} 
+          key={book.node.id} 
+          handleBookOpen={this.openBook.bind(this)}/>
+      )
+    );
+  }
+
+  renderWaypoint() {
+      return (
+        <Waypoint
+          onEnter={this.loadMoreItems.bind(this)}
+          bottomOffset={-20}
+        />
+      )
   }
 
   render() {
@@ -141,10 +144,8 @@ class BookList extends React.Component {
     );
     return (
       <div className={bookListClass}>
-        <ReactList 
-          itemRenderer={this.renderItem.bind(this)}
-          length={this.props.catalog.allBooks.edges.length}
-        />
+      {this.renderList()}
+      {this.renderWaypoint()}
       </div>
     )
   }
