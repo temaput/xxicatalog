@@ -2,15 +2,12 @@ import React from 'react';
 import Relay from 'react-relay';
 import classNames from 'classnames';
 import RaisedButton from 'material-ui/RaisedButton';
+import {Link} from 'react-router';
 
 class BookPage extends React.Component {
-  pickCategory(categoryId, hasBooks) {
-    this.props.handleCategoryPick(categoryId, hasBooks);
-  }
   render() {
     const pageClass = classNames(
       'mdl-grid', 'main-content',
-      { visuallyhidden: this.props.hidden }
     )
 
     const book = this.props.catalog.bookNode;
@@ -26,18 +23,16 @@ class BookPage extends React.Component {
       <div className={pageClass}>
         <div className="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
             <div className="book-page__breadcrumbs">
-              <a 
-                href="#"
-                onTouchTap={this.pickCategory.bind(this, parentCategory.id, parentCategory.hasBooks)} 
+              <Link
+                to={"/books/" + parentCategory.id}
                 className="mdl-typography--caption">
                 {parentCategory.title}&nbsp;&gt;&nbsp;
-              </a>
-              <a 
-                href="#"
-                onTouchTap={this.pickCategory.bind(this, category.id, category.hasBooks)} 
+              </Link>
+              <Link
+                to={"/books/" + category.id}
                 className="mdl-typography--caption">
                 {category.title}
-              </a>
+              </Link>
             </div>
           <header className="mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--4-col-phone book-list__header ">
 
