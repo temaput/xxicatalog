@@ -24,7 +24,7 @@ class BookPage extends React.Component {
         <div className="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
             <div className="book-page__breadcrumbs">
               <Link
-                to={"/books/" + parentCategory.id}
+                to={parentCategory.hasBooks ? "/books/" + parentCategory.id: "/"}
                 className="mdl-typography--caption">
                 {parentCategory.title}&nbsp;&gt;&nbsp;
               </Link>
