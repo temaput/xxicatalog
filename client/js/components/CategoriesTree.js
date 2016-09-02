@@ -3,13 +3,18 @@ import Relay from 'react-relay';
 import Drawer from 'material-ui/Drawer';
 import {List, ListItem} from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
+import {hashHistory} from 'react-router';
 
 
 
 class CategoriesTree extends React.Component {
   handle(categoryId, hasBooks=true) {
-      this.props.handleClick(categoryId, hasBooks);
-      this.props.onChange(false);
+    if (!hasBooks) {
+      hashHistory.push('/');
+    } else {
+      hashHistory.push('/books/'+categoryId);
+    }
+    this.props.onChange(false);
   }
     
   renderList() {
@@ -26,9 +31,10 @@ class CategoriesTree extends React.Component {
         <ListItem
           primaryText={item.title}
           key={item.id}
-          {...actionProps}
           {...nestedProps}
-        />
+          {...actionProps}
+          >
+        </ListItem>
       )
 
 
@@ -39,8 +45,7 @@ class CategoriesTree extends React.Component {
   render() {
     const list = this.renderList();
     const handleRootClick = () => {
-      this.props.handleClick(this.props.catalog.rootCategory.id, false);
-      this.props.onChange(false);
+      this.handle(this.props.catalog.rootCategory.id, false);
     }
     return (
       <Drawer 

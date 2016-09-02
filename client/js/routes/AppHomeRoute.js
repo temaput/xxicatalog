@@ -25,6 +25,7 @@ export default (
     <IndexRoute
       component={BookList}
       queries={catalogQuery}
+      prepareParams={params => ({ ...params, category: null})}
     />
     <Route
       path="/books/:category"
