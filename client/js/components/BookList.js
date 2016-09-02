@@ -101,23 +101,21 @@ const BookContainer = Relay.createContainer(Book, {
   },
 });
 
-const bookListSize = 10;
+const bookListSize = 3;
 class BookList extends React.Component {
+  openBook() {
+    this.props.relay.setVariables({first:100})
+  }
   renderItem(index, key) {
-    const books = this.props.catalog.allBooks.edges
-    if (index === books.length-3) {
-      this.props.relay.setVariables({
-        first: books.length + bookListSize
-      });
-    }
+    const books = this.props.catalog.allBooks.edges;
     const bookNode = books[index].node;
-    return <BookContainer bookNode={bookNode} key={bookNode.id} handleBookOpen={this.props.handleBookOpen}/>
+    console.log(index, key);
+    return <BookContainer bookNode={bookNode} key={bookNode.id} handleBookOpen={this.openBook.bind(this)}/>
   }
 
   render() {
     const bookListClass = classNames(
       'main-content', 'book-list',
-      {visuallyhidden: this.props.hidden}
     );
     return (
       <div className={bookListClass}>

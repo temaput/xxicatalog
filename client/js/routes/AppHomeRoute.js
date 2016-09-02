@@ -1,12 +1,36 @@
+import React from 'react';
 import Relay from 'react-relay';
+import Route from 'react-router/lib/Route';
+import IndexRoute from 'react-router/lib/IndexRoute';
 
-export default class extends Relay.Route {
-  static queries = {
-    catalog: () => Relay.QL`
+import App from '../components/App';
+import BookList from '../components/BookList';
+import BookPage from '../components/BookPage';
+
+
+const catalogQuery = {
+  catalog: () => Relay.QL`
       query {
       catalog
       }
-    `,
-  };
-  static routeName = 'AppHomeRoute';
-}
+    `
+};
+
+export default (
+  <Route
+    path="/"
+    component={App}
+    queries={catalogQuery}
+    >
+    <Route
+      path="/books/:category"
+      component={BookList}
+      queries={catalogQuery}
+    />
+    <Route
+      path="/book-page/:bookId"
+      component={BookPage}
+      queries={catalogQuery}
+    />
+  </Route>
+);
