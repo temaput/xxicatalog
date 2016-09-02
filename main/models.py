@@ -10,7 +10,11 @@ class Category(MP_Node):
     title = models.CharField(max_length=255)
 
     def __str__(self):
-        return 'Рубрика %s' % self.title
+        return self.title
+
+    class Meta:
+        verbose_name = 'Рубрика'
+        verbose_name_plural = 'Рубрики'
 
 
 class Book(models.Model):
@@ -93,7 +97,11 @@ class Book(models.Model):
             return os.path.join(classica_site, bid)
 
     def __str__(self):
-        return "%s. %s" % (self.title, self.subtitle)
+        return "%s. %s (%s)" % (self.title, self.subtitle, self.author)
+
+    class Meta:
+        verbose_name = 'Издание'
+        verbose_name_plural = 'Издания'
 
 
 class Folder(models.Model):
