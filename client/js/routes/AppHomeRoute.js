@@ -22,6 +22,10 @@ export default (
     component={App}
     queries={catalogQuery}
     >
+    <IndexRoute
+      component={BookList}
+      queries={catalogQuery}
+    />
     <Route
       path="/books/:category"
       component={BookList}

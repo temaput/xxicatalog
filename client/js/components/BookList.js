@@ -141,7 +141,7 @@ class BookList extends React.Component {
 
   render() {
     const bookListClass = classNames(
-      'main-content', 'book-list',
+      'main-content', 'book-list', 'mdl-grid'
     );
     return (
       <div className={bookListClass}>
