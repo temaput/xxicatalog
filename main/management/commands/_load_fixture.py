@@ -1,6 +1,7 @@
 from main.models import Category, Book, Folder
 from urllib import request
 from os.path import join
+import sys
 from django.conf import settings
 from urllib.error import URLError, HTTPError
 
@@ -49,17 +50,19 @@ def add_book(category, el):
     try:
         b.save()
     except:
-        print("Error saving book %s" % b.title)
-
-    folders = get_or_create_folders(el)
-    if folders is not None:
-        for f in folders:
-            b.folders.add(f)
-
-        try:
-            b.save()
-        except:
-            print("Error saving folders of book %s" % b.title)
+        print("Error saving book %s" % b.title, sys.exc_info())
+    else:
+        folders = get_or_create_folders(el)
+        if folders is not None:
+            for f in folders:
+                b.folders.add(f)
+            try:
+                b.save()
+            except:
+                print(
+                    "Error saving folders of book %s" % b.title,
+                    sys.exc_info()
+                )
 
 
 def get_or_create_folders(el):

@@ -45,7 +45,7 @@ class Book(models.Model):
     )
     page_amount = models.CharField(
         "Количество страниц",
-        max_length=15,
+        max_length=50,
         blank=True
     )
     price = models.DecimalField(
