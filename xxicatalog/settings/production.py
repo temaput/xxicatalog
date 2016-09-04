@@ -1,20 +1,20 @@
 from os.path import join
+from os import getenv
 from .base import *
-from .local_settings import SECRET_KEY, DB_PASSWORD
 
 DEBUG = False
-ALLOWED_HOSTS = ['localhost', 'catalog.classica21.ru']
+ALLOWED_HOSTS = ['localhost', 'catalog.classica21.ru', getenv('SERVER_NAME')]
 DEFAULT_FROM_EMAIL = 'info@classica21.ru'
+SECRET_KEY = getenv('DJANGO_SECRET_KEY', 'not set')
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': DB_PASSWORD,
+        'NAME': getenv('POSTGRES_DB', 'postgres'),
+        'USER': getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': getenv('POSTGRES_PASSWORD', ''),
         'HOST': 'db',
         'PORT': 5432,
-
     }
 }
 

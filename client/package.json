@@ -1,14 +1,14 @@
 {
-  "name": "relay-starter-kit",
+  "name": "xxicatalog",
   "private": true,
-  "description": "A quick way to get up and running with Relay",
-  "repository": "facebook/relay-starter-kit",
+  "description": "Interactive xxi publishers catalog",
+  "repository": "temaput/xxicatalog",
   "version": "0.1.0",
   "scripts": {
     "start": "npm run update-schema && webpack-dev-server --port 3000",
     "start-outer": "npm run update-schema && webpack-dev-server --port 3000 --host 10.0.0.55",
     "update-schema": "../manage.py graphql_schema --schema xxicatalog.schema --out ../xxicatalog/schema.json",
-    "deploy-static": "cp -R public ../nginx/ && webpack -p --output-path=../nginx/public/js --output-filename=app.js"
+    "deploy-static": "cp -R public ../nginx/ && NODE_ENV=production webpack --output-path=../nginx/public/js --output-filename=app.js"
   },
   "dependencies": {
     "autoprefixer": "^6.4.0",
