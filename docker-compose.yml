@@ -30,7 +30,7 @@ services:
             PSTGRES_USER:
             POSTGRES_PASSWORD:
             POSTGRES_DB:
-            DJANGO_SECRET:
+            DJANGO_SECRET_KEY:
 volumes:
     data:
         external:
