@@ -37,7 +37,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # STATIC_ROOT is to collect static offline in deploy
-STATIC_ROOT = join(BASE_DIR, 'nginx', 'static')
+STATIC_ROOT = '/data/static'
 
 # MEDIA_ROOT is to collect media online
 MEDIA_ROOT = '/data/media'

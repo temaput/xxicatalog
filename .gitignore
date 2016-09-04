@@ -8,7 +8,6 @@
 local_settings.py
 *.bak
 media_root/
-nginx/static/
 nginx/public/
 
 # Byte-compiled / optimized / DLL files
