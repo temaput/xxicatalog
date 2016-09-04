@@ -108,26 +108,32 @@ def get_book_dict(el):
 
 
 def get_book_cover(el):
-    base_url = "http://www.classica21.ru/image/big_pic"
+
     covers_upload_to = 'book_covers'
     covers_dir = join(settings.MEDIA_ROOT, covers_upload_to)
     makedirs(covers_dir, exist_ok=True)
-    cover_tag = el.find('book_bpic')
-    if cover_tag is not None and cover_tag.text is not None:
-        cover_fname = cover_tag.text.strip()
-        if len(cover_fname):
-            cover_file_path = join(covers_dir, cover_fname)
-            request_url = join(base_url, cover_fname)
-            try:
-                request.urlretrieve(request_url, cover_file_path)
-            except HTTPError as e:
-                print('The server couldn\'t fulfill the request.')
-                print('Error code: ', e.code)
-            except URLError as e:
-                print('We failed to reach a server.')
-                print('Reason: ', e.reason)
-            except:
-                print('Unexpected connection error!')
-                print('Error details: ', sys.exc_info())
-            else:
-                return join(covers_upload_to, cover_fname)
+
+    for url_part, tagname in (
+            ('big_pic', 'book_bpic'),
+            ('small_pic', 'book_spic'),
+    ):
+        base_url = "http://www.classica21.ru/image/%s" % url_part
+        cover_tag = el.find(tagname)
+        if cover_tag is not None and cover_tag.text is not None:
+            cover_fname = cover_tag.text.strip()
+            if len(cover_fname):
+                cover_file_path = join(covers_dir, cover_fname)
+                request_url = join(base_url, cover_fname)
+                try:
+                    request.urlretrieve(request_url, cover_file_path)
+                except HTTPError as e:
+                    print('The server couldn\'t fulfill the request.')
+                    print('Error code: ', e.code)
+                except URLError as e:
+                    print('We failed to reach a server.')
+                    print('Reason: ', e.reason)
+                except:
+                    print('Unexpected connection error!')
+                    print('Error details: ', sys.exc_info())
+                else:
+                    return join(covers_upload_to, cover_fname)
