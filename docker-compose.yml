@@ -1,13 +1,32 @@
 version: '2'
 services:
     db:
-        image: postgres
+        build: 
+            context: .
+            dockerfile: postgres_ru_Dockerfile
+        volumes:
+            - data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_PASSWORD:
+            PGDATA: "/var/lib/postgresql/data/pgdata"
+    static:
+        build: ./nginx
+        ports: 
+            - "8080:80"
+        volumes:
+            - data:/usr/share/nginx/data
+        links:
+            - web:gunicorn
     web:
         build: .
-        command: python manage.py runserver 0.0.0.0:8000
-        volumes:
-          - .:/code
+        command: gunicorn --workers=4 --bind=0.0.0.0:8000 xxicatalog.wsgi 
         ports:
             - "8000:8000"
         depends_on:
             - db
+        volumes:
+            - data:/data
+volumes:
+    data:
+        external:
+            name: xxicatalog

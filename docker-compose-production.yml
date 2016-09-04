@@ -1,0 +1,9 @@
+version: '2'
+services:
+    static:
+        ports: 
+            - "80:80"
+    web:
+        command: gunicorn --workers=4 --bind=0.0.0.0:8000 xxicatalog.wsgi 
+        ports:
+            - "8000:8000"

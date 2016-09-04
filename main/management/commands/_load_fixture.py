@@ -4,6 +4,9 @@ from os.path import join
 import sys
 from django.conf import settings
 from urllib.error import URLError, HTTPError
+import socket
+
+socket.setdefaulttimeout(30.0)
 
 
 def iter_tree(root_el, group_record, book_routine):
@@ -121,5 +124,8 @@ def get_book_cover(el):
             except URLError as e:
                 print('We failed to reach a server.')
                 print('Reason: ', e.reason)
+            except:
+                print('Unexpected connection error!')
+                print('Error details: ', sys.exc_info())
             else:
                 return join(covers_upload_to, cover_fname)

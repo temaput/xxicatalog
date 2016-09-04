@@ -7,7 +7,8 @@
   "scripts": {
     "start": "npm run update-schema && webpack-dev-server --port 3000",
     "start-outer": "npm run update-schema && webpack-dev-server --port 3000 --host 10.0.0.55",
-    "update-schema": "../manage.py graphql_schema --schema xxicatalog.schema --out ../xxicatalog/schema.json"
+    "update-schema": "../manage.py graphql_schema --schema xxicatalog.schema --out ../xxicatalog/schema.json",
+    "deploy-static": "cp -R public ../nginx/ && webpack -p --output-path=../nginx/public/js --output-filename=app.js"
   },
   "dependencies": {
     "autoprefixer": "^6.4.0",

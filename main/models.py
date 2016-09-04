@@ -102,6 +102,7 @@ class Book(models.Model):
     class Meta:
         verbose_name = 'Издание'
         verbose_name_plural = 'Издания'
+        ordering = ('title', 'subtitle', 'author')
 
 
 class Folder(models.Model):

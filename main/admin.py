@@ -14,5 +14,5 @@ class BookAdmin(admin.ModelAdmin):
     class Media:
         js = (
             '//cdn.tinymce.com/4/tinymce.min.js',
-            "tinymce_init.js"
+            "js/tinymce_init.js"
         )
