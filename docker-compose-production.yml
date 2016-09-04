@@ -1,7 +1,11 @@
 version: '2'
 services:
+    db:
+        restart: always
     static:
         ports: 
             - "80:80"
+        restart: always
     web:
         command: gunicorn --workers=4 --bind=0.0.0.0:8000 xxicatalog.wsgi 
+        restart: always
