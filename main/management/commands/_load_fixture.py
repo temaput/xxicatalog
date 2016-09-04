@@ -1,6 +1,7 @@
 from main.models import Category, Book, Folder
 from urllib import request
 from os.path import join
+from os import makedirs
 import sys
 from django.conf import settings
 from urllib.error import URLError, HTTPError
@@ -110,6 +111,7 @@ def get_book_cover(el):
     base_url = "http://www.classica21.ru/image/big_pic"
     covers_upload_to = 'book_covers'
     covers_dir = join(settings.MEDIA_ROOT, covers_upload_to)
+    makedirs(covers_dir, exist_ok=True)
     cover_tag = el.find('book_bpic')
     if cover_tag is not None and cover_tag.text is not None:
         cover_fname = cover_tag.text.strip()
