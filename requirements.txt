@@ -21,5 +21,6 @@ simplegeneric==0.8.1
 singledispatch==3.4.0.3
 six==1.10.0
 traitlets==4.2.2
+django-imagekit
 psycopg2
 gunicorn
