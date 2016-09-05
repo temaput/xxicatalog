@@ -3,6 +3,9 @@ from django.db import models
 from django.conf import settings
 from treebeard.mp_tree import MP_Node
 
+from imagekit.models import ImageSpecField
+from imagekit.processors import Thumbnail
+
 # Create your models here.
 
 
@@ -73,6 +76,12 @@ class Book(models.Model):
         "Фото обложки",
         blank=True,
         upload_to='book_covers'
+    )
+    cover_thumb = ImageSpecField(
+        source='book_cover',
+        processors=[Thumbnail(settings.CATALOG_COVER_THUMB_WIDTH)],
+        format='JPEG',
+        options={'quality': 80}
     )
     book_id = models.PositiveIntegerField(
         "Идентификатор книги на сайте",

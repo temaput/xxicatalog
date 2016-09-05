@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_graphiql',
     'django_filters',
     'graphene.contrib.django',
+    'imagekit',
     'main',
 
 ]
@@ -112,3 +113,5 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = join(BASE_DIR, 'media_root')
 MEDIA_URL = '/media/'
+
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'

@@ -1,1 +1,2 @@
 CLASSICA_SITE_URL = "http://classica21.ru"
+CATALOG_COVER_THUMB_WIDTH = 147
