@@ -34,6 +34,7 @@ class CategoryNode(DjangoNode):
 class BookNode(DjangoNode):
 
     book_cover = graphene.String()
+    book_cover_full = graphene.String()
     pk = graphene.String()
 
     folders = graphene.List(FolderNode)
@@ -49,6 +50,15 @@ class BookNode(DjangoNode):
         return self.instance.pk
 
     def resolve_book_cover(self, *args):
+        """
+        Return scaled thumb by default
+        """
+        try:
+            return self.instance.cover_thumb.url
+        except ValueError:
+            pass
+
+    def resolve_book_cover_full(self, *args):
         try:
             return self.instance.book_cover.url
         except ValueError:

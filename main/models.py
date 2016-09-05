@@ -4,7 +4,7 @@ from django.conf import settings
 from treebeard.mp_tree import MP_Node
 
 from imagekit.models import ImageSpecField
-from imagekit.processors import Thumbnail
+from imagekit.processors import ResizeToFit
 
 # Create your models here.
 
@@ -79,9 +79,11 @@ class Book(models.Model):
     )
     cover_thumb = ImageSpecField(
         source='book_cover',
-        processors=[Thumbnail(settings.CATALOG_COVER_THUMB_WIDTH)],
+        processors=[
+            ResizeToFit(settings.CATALOG_COVER_THUMB_WIDTH, upscale=False)
+        ],
         format='JPEG',
-        options={'quality': 80}
+        options={'quality': 100}
     )
     book_id = models.PositiveIntegerField(
         "Идентификатор книги на сайте",
