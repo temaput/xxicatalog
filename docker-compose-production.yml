@@ -3,6 +3,11 @@ services:
     db:
         restart: always
     static:
+        build: ./nginx
+        volumes:
+            - data:/usr/share/nginx/data
+        links:
+            - web:gunicorn
         ports: 
             - "80:80"
         restart: always

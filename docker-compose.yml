@@ -11,14 +11,6 @@ services:
             POSTGRES_PASSWORD:
             POSTGRES_DB:
             PGDATA: "/var/lib/postgresql/data/pgdata"
-    static:
-        build: ./nginx
-        ports: 
-            - "8080:80"
-        volumes:
-            - data:/usr/share/nginx/data
-        links:
-            - web:gunicorn
     web:
         build: .
         command: gunicorn --workers=4 --bind=0.0.0.0:8000 xxicatalog.wsgi 

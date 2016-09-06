@@ -1,12 +1,49 @@
 import os
 from django.db import models
 from django.conf import settings
+
+from django.contrib.postgres.search import (
+    SearchVector, SearchQuery, SearchRank
+)
+from functools import reduce
 from treebeard.mp_tree import MP_Node
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
 # Create your models here.
+
+
+def full_text_search(qs, search_text, fields_tuple):
+    """Runs postgres full text search
+
+    :search_text: string
+    :fields_tuple: tuple aka ((fname, weight),)
+    :qs: initional qs
+    :returns: qs with search applied, sorted by rank
+
+    """
+
+    sq = SearchQuery(search_text)
+    svectors = (
+        SearchVector(fname, weight=weight) for fname, weight in fields_tuple
+    )
+    return qs.annotate(
+        rank=SearchRank(reduce(lambda a, b: a + b, svectors), sq)
+    ).filter(rank__gte=0.3).order_by('-rank')
+
+
+class FullTextSearchQS(models.QuerySet):
+    """Custom qs to make full text search with postgres"""
+
+    def ranked_search(self, search_text):
+        fields_tuple = (
+            ('title', 'A'),
+            ('subtitle', 'A'),
+            ('author', 'A'),
+            ('book_description', 'B'),
+        )
+        return full_text_search(self, search_text, fields_tuple)
 
 
 class Category(MP_Node):
@@ -97,6 +134,9 @@ class Book(models.Model):
         verbose_name='Рубрика'
     )
 
+    objects = models.Manager()
+    full_text_search = FullTextSearchQS.as_manager()
+
     @property
     def full_url(self):
         classica_site = settings.CLASSICA_SITE_URL
@@ -108,7 +148,7 @@ class Book(models.Model):
             return os.path.join(classica_site, bid)
 
     def __str__(self):
-        return "%s. %s (%s)" % (self.title, self.subtitle, self.author)
+        return "%s %s (%s)" % (self.title, self.subtitle, self.author)
 
     class Meta:
         verbose_name = 'Издание'

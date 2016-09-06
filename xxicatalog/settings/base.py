@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import os
+from os import getenv
 from os.path import abspath, dirname, join
 from .catalog_settings import *
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_graphiql',
     'django_filters',
+    'django.contrib.postgres',
     'graphene.contrib.django',
     'imagekit',
     'main',
@@ -83,8 +84,12 @@ WSGI_APPLICATION = 'xxicatalog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('POSTGRES_DB', 'postgres'),
+        'USER': getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': getenv('POSTGRES_PASSWORD', ''),
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 

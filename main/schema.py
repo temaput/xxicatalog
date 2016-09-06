@@ -1,3 +1,4 @@
+from django.db.models import Count
 import graphene
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 from graphene.contrib.django.types import DjangoNode
@@ -6,6 +7,7 @@ from .models import Book, Category, Folder
 
 
 class FolderNode(DjangoNode):
+
     full_url = graphene.String()
 
     class Meta:
@@ -13,12 +15,25 @@ class FolderNode(DjangoNode):
 
 
 class CategoryNode(DjangoNode):
+
     children = graphene.List(graphene.LazyType(lambda _: CategoryNode))
     parent = graphene.Field(graphene.LazyType(lambda _: CategoryNode))
     has_books = graphene.Boolean()
+    books_count = graphene.Int()
+
+    def __init__(self, *args, **kwargs):
+        self.facets = kwargs.pop('facets', None)
+        super(CategoryNode, self).__init__(*args, **kwargs)
+
+    def resolve_books_count(self, *args):
+        facets = getattr(self, 'facets', None)
+        if facets is None:
+            return self.instance.books.count()
+        else:
+            return facets.get(self.instance.pk, 0)
 
     def resolve_children(self, *args):
-        return [CategoryNode(cat) for cat in
+        return [CategoryNode(cat, facets=self.facets) for cat in
                 self.instance.get_children()]
 
     def resolve_parent(self, *args):
@@ -69,14 +84,41 @@ class BookNode(DjangoNode):
         filter_fields = ['price', 'category']
 
 
+class SearchResult(graphene.ObjectType):
+
+    """
+    Another dummy sub-root-node for searching
+    """
+    books = graphene.relay.ConnectionField(BookNode)
+    root_category = graphene.Field(CategoryNode)
+
+
 class Catalog(graphene.relay.Node):
+
     """
     Dummy root-node class
     """
     all_books = DjangoFilterConnectionField(BookNode)
     bookNode = graphene.relay.NodeField(BookNode)
     root_category = graphene.Field(CategoryNode)
+    search_result = graphene.Field(
+        SearchResult,
+        search_text=graphene.String().NonNull
+    )
     id = None
+
+    def resolve_search_result(self, args, info):
+        search_text = args.get('search_text')
+        qs = Book.full_text_search.ranked_search(search_text)
+        books = [BookNode(b) for b in qs]
+        facets = {
+            record['category']: record['facet'] for record in
+            qs.order_by('category')
+            .values('category')
+            .annotate(facet=Count('pk'))
+        }
+        root_category = CategoryNode(Category.objects.first(), facets=facets)
+        return SearchResult(books=books, root_category=root_category)
 
     def resolve_root_category(self, *args):
         return CategoryNode(Category.objects.first())
@@ -87,6 +129,7 @@ class Catalog(graphene.relay.Node):
 
 
 class Query(graphene.ObjectType):
+
     catalog = graphene.Field(Catalog)
     node = graphene.relay.NodeField()
 
