@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=255, verbose_name='Заголовок')),
                 ('subtitle', models.CharField(blank=True, max_length=512, verbose_name='Подзаголовок')),
                 ('author', models.CharField(blank=True, max_length=255, verbose_name='Автор / Составитель / Автор-составитель')),
-                ('book_format', models.CharField(blank=True, max_length=100, verbose_name='Формат')),
+                ('book_format', models.CharField(blank=True, max_length=255, verbose_name='Формат')),
                 ('book_edition', models.CharField(blank=True, max_length=100, verbose_name='Сведения об издании')),
                 ('book_translator', models.CharField(blank=True, max_length=100, verbose_name='Переводчик')),
                 ('book_translation', models.CharField(blank=True, max_length=100, verbose_name='Данные о переводе')),
