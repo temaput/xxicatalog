@@ -47,7 +47,7 @@ def get_group_title(el):
 
 def add_book(category, el):
     kwargs = get_book_dict(el)
-    b = Book(category=category, **kwargs)
+    b = Book(**kwargs)
     cover_fname = get_book_cover(el)
     if cover_fname is not None:
         b.book_cover.name = cover_fname
@@ -56,6 +56,7 @@ def add_book(category, el):
     except:
         print("Error saving book %s" % b.title, sys.exc_info())
     else:
+        b.categories.add(category)
         folders = get_or_create_folders(el)
         if folders is not None:
             for f in folders:
@@ -88,14 +89,14 @@ def get_book_dict(el):
         ('заголовок', 'title'),
         ('подзаголовок', 'subtitle'),
         ('автор', 'author'),
-        ('страниц', 'page_amount'),
         ('код', 'article'),
         ('цена', 'price'),
-        ('аннотация', 'annotation'),
-        ('город', 'city'),
-        ('издательство', 'publisher'),
         ('book_description', 'book_description'),
         ('book_id', 'book_id'),
+        ('book_format', 'book_format'),
+        ('book_edition', 'book_edition'),
+        ('book_translator', 'book_translator'),
+        ('book_translation', 'book_translation'),
     )
     d = {}
     for tagname, key in fnames:

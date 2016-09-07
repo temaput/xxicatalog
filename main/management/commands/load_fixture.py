@@ -26,5 +26,4 @@ class Command(BaseCommand):
 
     def cleanup(self):
         for m in (Category, Book, Folder):
-            for instance in m.objects.all():
-                instance.delete()
+            m.objects.all().delete()

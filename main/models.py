@@ -67,27 +67,37 @@ class Book(models.Model):
         max_length=512,
         blank=True
     )
+
     author = models.CharField(
-        "Автор по каталогу",
+        "Автор / Составитель / Автор-составитель",
         max_length=255,
         blank=True
+    )
 
-    )
-    city = models.CharField(
-        "Город",
-        max_length=15,
+    book_format = models.CharField(
+        "Формат",
+        max_length=255,
         blank=True
     )
-    publisher = models.CharField(
-        "Издательство",
-        max_length=128,
+
+    book_edition = models.CharField(
+        "Сведения об издании",
+        max_length=100,
         blank=True
     )
-    page_amount = models.CharField(
-        "Количество страниц",
-        max_length=50,
+
+    book_translator = models.CharField(
+        "Переводчик",
+        max_length=100,
         blank=True
     )
+
+    book_translation = models.CharField(
+        "Данные о переводе",
+        max_length=100,
+        blank=True
+    )
+
     price = models.DecimalField(
         "Цена",
         max_digits=15,
@@ -128,10 +138,11 @@ class Book(models.Model):
         null=True
     )
 
-    category = models.ForeignKey(
-        Category,
-        related_name='books',
-        verbose_name='Рубрика'
+    categories = models.ManyToManyField(
+        'main.Category',
+        verbose_name="Рубрики",
+        related_name="books",
+        blank=True
     )
 
     objects = models.Manager()

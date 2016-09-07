@@ -81,7 +81,7 @@ class BookNode(DjangoNode):
 
     class Meta:
         model = Book
-        filter_fields = ['price', 'category']
+        filter_fields = ['categories']
 
 
 class SearchResult(graphene.ObjectType):

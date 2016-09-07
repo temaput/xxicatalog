@@ -2,14 +2,21 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import Book, Category
-admin.site.register(Category)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    filter_horizontal = ('books',)
+    fields = ('title',)
 
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_filter = ('category',)
+    list_filter = ('categories',)
     ordering = ('title',)
     search_fields = ('title', 'subtitle', 'author')
+    filter_horizontal = ('categories',)
+    exclude = ('annotation', 'book_id',)
 
     class Media:
         js = (
