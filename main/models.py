@@ -123,6 +123,7 @@ class Book(models.Model):
         blank=True,
         upload_to='book_covers'
     )
+
     cover_thumb = ImageSpecField(
         source='book_cover',
         processors=[
@@ -131,6 +132,7 @@ class Book(models.Model):
         format='JPEG',
         options={'quality': 100}
     )
+
     book_id = models.PositiveIntegerField(
         "Идентификатор книги на сайте",
         blank=True,

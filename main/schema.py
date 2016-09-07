@@ -116,9 +116,9 @@ class Catalog(graphene.relay.Node):
         qs = Book.full_text_search.ranked_search(search_text)
         books = [BookNode(b) for b in qs]
         facets = {
-            record['category']: record['facet'] for record in
-            qs.order_by('category')
-            .values('category')
+            record['categories']: record['facet'] for record in
+            qs.order_by('categories')
+            .values('categories')
             .annotate(facet=Count('pk'))
         }
         root_category = CategoryNode(Category.objects.first(), facets=facets)
