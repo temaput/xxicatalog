@@ -161,7 +161,7 @@ export default Relay.createContainer(BookList, {
   fragments: {
     catalog: () => Relay.QL`
           fragment on Catalog {
-        allBooks(first:$first, category:$category) {
+        allBooks(first:$first, categories:$category) {
             edges {
                 node {
                     id

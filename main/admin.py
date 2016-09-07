@@ -16,7 +16,7 @@ class BookAdmin(admin.ModelAdmin):
     ordering = ('title',)
     search_fields = ('title', 'subtitle', 'author')
     filter_horizontal = ('categories',)
-    exclude = ('annotation', 'book_id',)
+    exclude = ('book_id', 'book_translation', 'book_translator')
 
     class Media:
         js = (

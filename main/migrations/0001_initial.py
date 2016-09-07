@@ -26,7 +26,6 @@ class Migration(migrations.Migration):
                 ('book_translation', models.CharField(blank=True, max_length=100, verbose_name='Данные о переводе')),
                 ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=15, null=True, verbose_name='Цена')),
                 ('article', models.CharField(blank=True, max_length=5, verbose_name='Артикул')),
-                ('annotation', models.TextField(blank=True, verbose_name='Аннотация по каталогу (из базы)')),
                 ('book_description', models.TextField(blank=True, verbose_name='Аннотация по сайту')),
                 ('book_cover', models.ImageField(blank=True, upload_to='book_covers', verbose_name='Фото обложки')),
                 ('book_id', models.PositiveIntegerField(blank=True, null=True, verbose_name='Идентификатор книги на сайте')),

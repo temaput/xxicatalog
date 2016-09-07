@@ -51,9 +51,13 @@ class BookNode(DjangoNode):
     book_cover = graphene.String()
     book_cover_full = graphene.String()
     pk = graphene.String()
+    categories = graphene.List(CategoryNode)
 
     folders = graphene.List(FolderNode)
     full_url = graphene.String()
+
+    def resolve_categories(self, *args):
+        return [CategoryNode(cat) for cat in self.instance.categories.all()]
 
     def resolve_full_url(self, *args):
         return self.instance.full_url

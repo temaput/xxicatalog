@@ -105,20 +105,19 @@ class Book(models.Model):
         blank=True,
         null=True
     )
+
     article = models.CharField(
         "Артикул",
         max_length=5,
         blank=True
     )
-    annotation = models.TextField(
-        "Аннотация по каталогу (из базы)",
-        blank=True
-    )
+
     book_description = models.TextField(
         "Аннотация по сайту",
         blank=True
 
     )
+
     book_cover = models.ImageField(
         "Фото обложки",
         blank=True,
