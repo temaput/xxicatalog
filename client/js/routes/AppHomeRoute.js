@@ -6,6 +6,7 @@ import IndexRoute from 'react-router/lib/IndexRoute';
 import App from '../components/App';
 import BookList from '../components/BookList';
 import BookPage from '../components/BookPage';
+import SearchResults from '../components/SearchResults';
 
 
 const catalogQuery = {
@@ -32,9 +33,19 @@ export default (
       component={BookList}
       queries={catalogQuery}
     />
+      <Route
+        path="/books/:category/book-search/:searchText"
+        component={SearchResults}
+        queries={catalogQuery}
+      />
     <Route
       path="/book-page/:bookId"
       component={BookPage}
+      queries={catalogQuery}
+    />
+    <Route
+      path="/book-search/:searchText"
+      component={SearchResults}
       queries={catalogQuery}
     />
   </Route>

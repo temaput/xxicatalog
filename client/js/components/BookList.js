@@ -87,7 +87,7 @@ class Book extends React.Component {
   }
 }
 
-const BookContainer = Relay.createContainer(Book, {
+export const BookContainer = Relay.createContainer(Book, {
   fragments: {
     bookNode: () => Relay.QL`
       fragment on BookNode {
@@ -102,16 +102,9 @@ const BookContainer = Relay.createContainer(Book, {
   },
 });
 
-const bookListSize = 10;
-class BookList extends React.Component {
-  state = {
-    isLoading: false,
-  }
+export const bookListSize = 10;
 
-  openBook() {
-    this.props.relay.setVariables({first:100})
-  }
-
+export class BookListComponent extends React.Component {
 
   loadMoreItems() {
     this.props.relay.setVariables({
@@ -125,7 +118,7 @@ class BookList extends React.Component {
         <BookContainer 
           bookNode={book.node} 
           key={book.node.id} 
-          handleBookOpen={this.openBook.bind(this)}/>
+          />
       )
     );
   }
@@ -153,7 +146,7 @@ class BookList extends React.Component {
 }
 
 
-export default Relay.createContainer(BookList, {
+export default Relay.createContainer(BookListComponent, {
   initialVariables: {
     first: bookListSize,
     category: null,

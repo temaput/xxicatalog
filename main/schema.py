@@ -1,7 +1,10 @@
 from django.db.models import Count
+from django.conf import settings
+
 import graphene
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 from graphene.contrib.django.types import DjangoNode
+from graphene.relay.fields import from_global_id
 
 from .models import Book, Category, Folder
 
@@ -88,7 +91,17 @@ class BookNode(DjangoNode):
         filter_fields = ['categories']
 
 
-class SearchResult(graphene.ObjectType):
+class SearchSuggestion(graphene.ObjectType):
+    """
+    Provides different types of suggestions
+    """
+    titles = graphene.String().List
+    authors = graphene.String().List
+    categories = graphene.List(CategoryNode)
+    books = graphene.List(BookNode)
+
+
+class SearchResults(graphene.ObjectType):
 
     """
     Another dummy sub-root-node for searching
@@ -105,15 +118,52 @@ class Catalog(graphene.relay.Node):
     all_books = DjangoFilterConnectionField(BookNode)
     bookNode = graphene.relay.NodeField(BookNode)
     root_category = graphene.Field(CategoryNode)
-    search_result = graphene.Field(
-        SearchResult,
+    search_results = graphene.Field(
+        SearchResults,
+        search_text=graphene.String().NonNull,
+        categories=graphene.String(),
+    )
+    search_suggestion = graphene.Field(
+        SearchSuggestion,
         search_text=graphene.String().NonNull
     )
     id = None
 
-    def resolve_search_result(self, args, info):
+    def resolve_search_suggestion(self, args, info):
         search_text = args.get('search_text')
         qs = Book.full_text_search.ranked_search(search_text)
+        proportion = settings.CATALOG_SEARCH_SUGGEST_PROPORTION
+        books = [BookNode(b) for b in qs[:proportion['books']]]
+
+        authors = [b['author'] for b in
+                   Book.full_text_search.search_authors(search_text)
+                   .order_by('author').values('author')
+                   .distinct()[:proportion['authors']]
+                   ]
+        titles = [b['title'] for b in
+                  Book.full_text_search.search_titles(search_text)
+                  .order_by('title').values('title')
+                  .distinct()[:proportion['titles']]
+                  ]
+        categories_qs = Category.objects.annotate(Count('books')).filter(
+            books__count__gt=0,
+            title__search=search_text
+        )
+        categories = [CategoryNode(cat) for cat
+                      in categories_qs[:proportion['categories']]]
+        return SearchSuggestion(
+            books=books,
+            authors=authors,
+            categories=categories,
+            titles=titles
+        )
+
+    def resolve_search_results(self, args, info):
+        search_text = args.get('search_text')
+        qs = Book.full_text_search.ranked_search(search_text)
+        categories = args.get('categories', None)
+        if categories is not None:
+            qs = qs.filter(categories=from_global_id(categories)[1])
         books = [BookNode(b) for b in qs]
         facets = {
             record['categories']: record['facet'] for record in
@@ -122,7 +172,10 @@ class Catalog(graphene.relay.Node):
             .annotate(facet=Count('pk'))
         }
         root_category = CategoryNode(Category.objects.first(), facets=facets)
-        return SearchResult(books=books, root_category=root_category)
+        return SearchResults(
+            books=books,
+            root_category=root_category,
+        )
 
     def resolve_root_category(self, *args):
         return CategoryNode(Category.objects.first())

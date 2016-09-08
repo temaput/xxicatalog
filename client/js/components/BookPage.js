@@ -18,7 +18,7 @@ class BookPage extends React.Component {
     };
     const breadcrumbs = book.categories.map(
       (category) => (
-            <div className="book-page__breadcrumbs-row">
+            <div key={category.id} className="book-page__breadcrumbs-row">
               <Link
                 to={category.parent.hasBooks ? "/books/" + category.parent.id: "/"}
                 className="mdl-typography--caption">

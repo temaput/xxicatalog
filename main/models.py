@@ -33,6 +33,18 @@ def full_text_search(qs, search_text, fields_tuple):
     ).filter(rank__gte=0.3).order_by('-rank')
 
 
+class Category(MP_Node):
+
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Рубрика'
+        verbose_name_plural = 'Рубрики'
+
+
 class FullTextSearchQS(models.QuerySet):
     """Custom qs to make full text search with postgres"""
 
@@ -45,23 +57,26 @@ class FullTextSearchQS(models.QuerySet):
         )
         return full_text_search(self, search_text, fields_tuple)
 
+    def search_titles(self, search_text):
+        fields_tuple = (
+            ('title', 'A'),
+        )
+        return full_text_search(self, search_text, fields_tuple)
 
-class Category(MP_Node):
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = 'Рубрика'
-        verbose_name_plural = 'Рубрики'
+    def search_authors(self, search_text):
+        fields_tuple = (
+            ('author', 'A'),
+        )
+        return full_text_search(self, search_text, fields_tuple)
 
 
 class Book(models.Model):
+
     title = models.CharField(
         "Заголовок",
         max_length=255
     )
+
     subtitle = models.CharField(
         "Подзаголовок",
         max_length=512,
