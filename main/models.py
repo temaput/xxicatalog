@@ -1,20 +1,49 @@
 import os
+import re
+from functools import reduce
 from django.db import models
 from django.conf import settings
+from django.core.cache import cache as default_cache
+from django.apps import apps
+from django.db.models.functions import Concat
 
 from django.contrib.postgres.search import (
-    SearchVector, SearchQuery, SearchRank
+    SearchVector, SearchQuery, SearchRank, TrigramSimilarity,
 )
-from functools import reduce
 from treebeard.mp_tree import MP_Node
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
+from logging import getLogger
+log = getLogger(__name__)
+
 # Create your models here.
 
+mainAppConfig = apps.get_app_config('main')
 
-def full_text_search(qs, search_text, fields_tuple):
+ONLY_WORDS_PATTERN = r'\w{3,}'
+
+
+def cached_keywords():
+    cache_key = 'CATALOG_CATEGORY_KEYWORDS_CACHE'
+    keywords = default_cache.get(cache_key)
+    if keywords is None:
+        log.debug("Compiling keywords...")
+        qs = mainAppConfig.get_model('Category').objects.all().values('title')
+        titles = ' '.join([cat['title'] for cat in qs])
+        word_list = re.findall(ONLY_WORDS_PATTERN, titles)
+        keywords = set(word_list)
+        default_cache.set(cache_key, keywords, None)
+    return keywords
+
+
+def sum_vectors(vectors_tuple):
+    return reduce(lambda a, b: a + b, vectors_tuple)
+
+
+def full_text_search(qs, search_text, fields_tuple, threshold,
+                     use_keywords=True):
     """Runs postgres full text search
 
     :search_text: string
@@ -23,14 +52,31 @@ def full_text_search(qs, search_text, fields_tuple):
     :returns: qs with search applied, sorted by rank
 
     """
-
     sq = SearchQuery(search_text)
-    svectors = (
+    svectors = sum_vectors(
         SearchVector(fname, weight=weight) for fname, weight in fields_tuple
     )
-    return qs.annotate(
-        rank=SearchRank(reduce(lambda a, b: a + b, svectors), sq)
-    ).filter(rank__gte=0.3).order_by('-rank')
+    if use_keywords:
+        keywords = cached_keywords()
+        word_list = set(re.findall(ONLY_WORDS_PATTERN, search_text))
+        intersection = keywords.intersection(word_list)
+        if intersection:
+            log.debug("Keywords search got intersection: %s", intersection)
+            refined_qs = qs.annotate(
+                keywords_search=svectors).filter(
+                    keywords_search=' '.join(intersection))
+            log.debug("Refined qs is %s elements long", qs.count())
+            qs = refined_qs if refined_qs.exists() else qs
+
+    return qs.annotate(rank=SearchRank(svectors, sq)).filter(
+        rank__gte=threshold)
+
+
+def trigram_search(qs, search_text, fields_tuple, threshold):
+    fields = Concat(*fields_tuple) if len(fields_tuple) > 1 \
+        else fields_tuple[0]
+    ts = TrigramSimilarity(fields, search_text)
+    return qs.annotate(similarity=ts).filter(similarity__gte=threshold)
 
 
 class Category(MP_Node):
@@ -48,26 +94,22 @@ class Category(MP_Node):
 class FullTextSearchQS(models.QuerySet):
     """Custom qs to make full text search with postgres"""
 
-    def ranked_search(self, search_text):
-        fields_tuple = (
+    def ranked_search(self, search_text, fields_tuple=(),
+                      threshold=settings.CATALOG_SEARCH_RANK_THRESHOLD,
+                      use_keywords=True):
+        fields_tuple = fields_tuple or (
             ('title', 'A'),
             ('subtitle', 'A'),
             ('author', 'A'),
             ('book_description', 'B'),
         )
-        return full_text_search(self, search_text, fields_tuple)
+        return full_text_search(self, search_text, fields_tuple, threshold,
+                                use_keywords)
 
-    def search_titles(self, search_text):
-        fields_tuple = (
-            ('title', 'A'),
-        )
-        return full_text_search(self, search_text, fields_tuple)
-
-    def search_authors(self, search_text):
-        fields_tuple = (
-            ('author', 'A'),
-        )
-        return full_text_search(self, search_text, fields_tuple)
+    def autocomplete_search(self, search_text, fields_tuple=(),
+                            threshold=settings.CATALOG_AUTOCOMPLETE_THRESHOLD):
+        fields_tuple = fields_tuple or ('title', 'subtitle')
+        return trigram_search(self, search_text, fields_tuple, threshold)
 
 
 class Book(models.Model):

@@ -1,8 +1,11 @@
 CLASSICA_SITE_URL = "http://classica21.ru"
 CATALOG_COVER_THUMB_WIDTH = 200
 CATALOG_SEARCH_SUGGEST_PROPORTION = {
-    'books': 10,
-    'authors': 10,
-    'titles': 10,
-    'categories': 10,
+    'suggestions': 10,
+    'books': 5,
+    'authors': 5,
+    'categories': 3,
 }
+CATALOG_AUTOCOMPLETE_THRESHOLD = 0.1
+CATALOG_SEARCH_RANK_THRESHOLD = 0.3
+CATALOG_AUTHORS_SIMILARITY_THRESHOLD = 0.3

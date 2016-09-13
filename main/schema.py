@@ -95,14 +95,13 @@ class SearchSuggestion(graphene.ObjectType):
     """
     Provides different types of suggestions
     """
-    titles = graphene.String().List
+    suggestions = graphene.String().List
     authors = graphene.String().List
     categories = graphene.List(CategoryNode)
     books = graphene.List(BookNode)
 
 
 class SearchResults(graphene.ObjectType):
-
     """
     Another dummy sub-root-node for searching
     """
@@ -111,7 +110,6 @@ class SearchResults(graphene.ObjectType):
 
 
 class Catalog(graphene.relay.Node):
-
     """
     Dummy root-node class
     """
@@ -131,31 +129,39 @@ class Catalog(graphene.relay.Node):
 
     def resolve_search_suggestion(self, args, info):
         search_text = args.get('search_text')
-        qs = Book.full_text_search.ranked_search(search_text)
+        qs = Book.full_text_search.ranked_search(search_text).order_by(
+            '-rank', 'title', 'subtitle')
         proportion = settings.CATALOG_SEARCH_SUGGEST_PROPORTION
         books = [BookNode(b) for b in qs[:proportion['books']]]
+        suggestions = ["{title} {subtitle}".format(**b) for b in
+                       Book.full_text_search
+                       .autocomplete_search(search_text)
+                       .order_by('-similarity', 'title', 'subtitle')
+                       .values('title', 'subtitle')
+                       .distinct()[:proportion['suggestions']]
+                       ]
 
         authors = [b['author'] for b in
-                   Book.full_text_search.search_authors(search_text)
-                   .order_by('author').values('author')
+                   Book.full_text_search
+                   .autocomplete_search(
+                       search_text,
+                       ('author',),
+                       settings.CATALOG_AUTHORS_SIMILARITY_THRESHOLD
+                   )
+                   .order_by('-similarity', 'author').values('author')
                    .distinct()[:proportion['authors']]
                    ]
-        titles = [b['title'] for b in
-                  Book.full_text_search.search_titles(search_text)
-                  .order_by('title').values('title')
-                  .distinct()[:proportion['titles']]
-                  ]
         categories_qs = Category.objects.annotate(Count('books')).filter(
             books__count__gt=0,
-            title__search=search_text
+            title__trigram_similar=search_text
         )
         categories = [CategoryNode(cat) for cat
                       in categories_qs[:proportion['categories']]]
         return SearchSuggestion(
+            suggestions=suggestions,
             books=books,
             authors=authors,
             categories=categories,
-            titles=titles
         )
 
     def resolve_search_results(self, args, info):
@@ -164,7 +170,8 @@ class Catalog(graphene.relay.Node):
         categories = args.get('categories', None)
         if categories is not None:
             qs = qs.filter(categories=from_global_id(categories)[1])
-        books = [BookNode(b) for b in qs]
+        books = [BookNode(b) for b
+                 in qs.order_by('title', 'subtitle')]
         facets = {
             record['categories']: record['facet'] for record in
             qs.order_by('categories')

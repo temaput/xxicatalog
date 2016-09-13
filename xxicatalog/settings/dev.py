@@ -1,15 +1,18 @@
 from .base import *
-from os import getenv
 LOGGING = {
     'version': 1,
     'handlers': {
         'console': {
-            'level': 'WARNING',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         }
     },
     'loggers': {
         'django.db.backends': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+        },
+        'main.models': {
             'level': 'DEBUG',
             'handlers': ['console'],
         }
