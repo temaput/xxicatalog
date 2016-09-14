@@ -12,6 +12,7 @@ import Router from 'react-router/lib/Router';
 import { applyRouterMiddleware, hashHistory} from 'react-router';
 import useRelay from 'react-router-relay';
 import  routes from './routes/AppHomeRoute';
+import { useScroll } from 'react-router-scroll';
 
 
 // Needed for onTouchTap
@@ -23,7 +24,7 @@ ReactDOM.render(
   <Router
     history={hashHistory}
     routes={routes}
-    render={applyRouterMiddleware(useRelay)}
+    render={applyRouterMiddleware(useRelay, useScroll())}
     environment={Relay.Store}
   />,
   document.getElementById('root')
