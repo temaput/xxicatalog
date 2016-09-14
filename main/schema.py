@@ -20,6 +20,10 @@ class FolderNode(DjangoNode):
         model = Folder
 
 
+class CategoryFacet(graphene.ObjectType):
+    category = graphene.Field(graphene.LazyType(lambda _: CategoryNode))
+    books_count = graphene.Int()
+
 class CategoryNode(DjangoNode):
 
     children = graphene.List(graphene.LazyType(lambda _: CategoryNode))
@@ -110,6 +114,7 @@ class SearchResults(graphene.ObjectType):
     """
     books = graphene.relay.ConnectionField(BookNode)
     root_category = graphene.Field(CategoryNode)
+    facets = graphene.List(CategoryFacet)
 
 
 class Catalog(graphene.relay.Node):
@@ -184,9 +189,18 @@ class Catalog(graphene.relay.Node):
             .annotate(facet=Count('pk'))
         }
         root_category = CategoryNode(Category.objects.first(), facets=facets)
+        facets_node = [
+            CategoryFacet(
+                category=CategoryNode(Category.objects.get(pk=pk)),
+                books_count=facets[pk]
+            )
+            for pk in facets
+        ]
+
         return SearchResults(
             books=books,
             root_category=root_category,
+            facets=facets_node
         )
 
     def resolve_root_category(self, *args):
