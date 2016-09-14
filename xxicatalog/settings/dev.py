@@ -12,6 +12,10 @@ LOGGING = {
             'level': 'WARNING',
             'handlers': ['console'],
         },
+        'main.schema': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
         'main.models': {
             'level': 'DEBUG',
             'handlers': ['console'],

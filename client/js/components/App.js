@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import BookList from './BookList';
 import BookPage from './BookPage';
+import SearchBox from './SearchBox.js';
 import CategoriesTree from './CategoriesTree';
 
 class App extends React.Component {
@@ -25,7 +26,9 @@ class App extends React.Component {
           <AppBar
             title="Каталог"
             onLeftIconButtonTouchTap={this.handleDrawerToggle}
-          />
+          >
+            <SearchBox catalog={this.props.catalog}/>
+          </AppBar>
 
         <CategoriesTree
           open={this.state.drawerOpen}
@@ -50,6 +53,7 @@ export default Relay.createContainer(App, {
       ${CategoriesTree.getFragment('catalog')}
       ${BookList.getFragment('catalog')}
       ${BookPage.getFragment('catalog')}
+      ${SearchBox.getFragment('catalog')}
     }
     `,
   }

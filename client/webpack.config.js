@@ -12,6 +12,9 @@ module.exports = {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin()
   ]: [],
+  devtool: (
+    process.env.NODE_ENV==='production' ? 'eval-source-map': 'source-map'
+  ),
   module: {
     loaders: [
       {

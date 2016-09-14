@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models import Count
 from django.conf import settings
 
@@ -8,6 +10,7 @@ from graphene.relay.fields import from_global_id
 
 from .models import Book, Category, Folder
 
+log = logging.getLogger(__name__)
 
 class FolderNode(DjangoNode):
 
@@ -157,6 +160,8 @@ class Catalog(graphene.relay.Node):
         )
         categories = [CategoryNode(cat) for cat
                       in categories_qs[:proportion['categories']]]
+        log.debug("Resolved suggestions: %s, %s, %s, %s",
+                  suggestions, authors, categories, books)
         return SearchSuggestion(
             suggestions=suggestions,
             books=books,
@@ -171,7 +176,7 @@ class Catalog(graphene.relay.Node):
         if categories is not None:
             qs = qs.filter(categories=from_global_id(categories)[1])
         books = [BookNode(b) for b
-                 in qs.order_by('title', 'subtitle')]
+                 in qs.order_by('-rank', 'title', 'subtitle')]
         facets = {
             record['categories']: record['facet'] for record in
             qs.order_by('categories')
