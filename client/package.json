@@ -34,7 +34,6 @@
     "react-relay": "0.9.2",
     "react-router": "^2.7.0",
     "react-router-relay": "^0.13.4",
-    "react-router-scroll": "^0.3.2",
     "react-tap-event-plugin": "^1.0.0",
     "react-waypoint": "^3.1.1",
     "require-clean": "0.1.3",

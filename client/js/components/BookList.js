@@ -111,12 +111,8 @@ export class BookListComponent extends React.Component {
 
   loadMoreItems() {
     const first = this.props.relay.variables.first + bookListSize;
-    this.props.relay.setVariables({
-      first: first
-    });
-    const browserHistory = window.history;
-    browserHistory.replaceState({first: first}, {
-      ...this.props.location, 
+    this.props.router.push({
+      state : {first}
     });
   }
 

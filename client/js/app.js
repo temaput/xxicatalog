@@ -9,7 +9,7 @@ import styles from '../styles/styles.scss';
 
 
 import Router from 'react-router/lib/Router';
-import { applyRouterMiddleware, hashHistory} from 'react-router';
+import { applyRouterMiddleware, browserHistory} from 'react-router';
 import useRelay from 'react-router-relay';
 import  routes from './routes/AppHomeRoute';
 import { useScroll } from 'react-router-scroll';
@@ -22,9 +22,9 @@ injectTapEventPlugin();
 
 ReactDOM.render(
   <Router
-    history={hashHistory}
+    history={browserHistory}
     routes={routes}
-    render={applyRouterMiddleware(useRelay, useScroll())}
+    render={applyRouterMiddleware(useRelay )}
     environment={Relay.Store}
   />,
   document.getElementById('root')

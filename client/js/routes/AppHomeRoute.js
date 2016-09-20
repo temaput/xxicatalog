@@ -54,6 +54,7 @@ export default (
       path="/book-page/:bookId"
       component={BookPage}
       queries={catalogQuery}
+      onEnter={() => window.scroll(0,0)}
     />
     <Route
       path="/book-search/:searchText"
