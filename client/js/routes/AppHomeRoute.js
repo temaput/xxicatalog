@@ -17,6 +17,14 @@ const catalogQuery = {
     `
 };
 
+function prepareBookListParams(params, { location }) {
+    return Object.assign(
+      params,
+      location.state && location.state.first 
+        ? {first: location.state.first}: {}
+    );
+  }
+
 export default (
   <Route
     path="/"
@@ -26,12 +34,16 @@ export default (
     <IndexRoute
       component={BookList}
       queries={catalogQuery}
-      prepareParams={params => ({ ...params, category: null})}
+      prepareParams={(params, props) => ({
+        ...prepareBookListParams(params, props), 
+        category: null
+      })}
     />
     <Route
       path="/books/:category"
       component={BookList}
       queries={catalogQuery}
+      prepareParams={prepareBookListParams}
     />
       <Route
         path="/books/:category/book-search/:searchText"

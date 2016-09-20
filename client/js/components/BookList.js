@@ -3,18 +3,21 @@ import Relay from 'react-relay';
 import classNames from 'classnames';
 import Waypoint from 'react-waypoint';
 import {Link} from 'react-router';
+import {withRouter} from 'react-router';
 
 
 
 class Book extends React.Component {
-  openBook = (e) => {
-    this.props.handleBookOpen(this.props.bookNode.id)
-  }
+
   renderHorizontal2() {
+    const {bookCover, id, title, subtitle, author} = this.props.bookNode;
+    const coverPlaceholder = `http://placehold.it/150x220/?text=${title}`;
     return (
         <article className="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing mdl-shadow--4dp">
           <header className="mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--4-col-phone book-list__header">
-            <img className="book-list__cover" src={this.props.bookNode.bookCover} alt={this.props.bookNode.title}/>
+            <img className="book-list__cover" 
+              src={ bookCover ? bookCover: coverPlaceholder } 
+              alt={this.props.bookNode.title}/>
           </header>
           <div className="mdl-card mdl-cell--9-col mdl-cell--6-col-tablet">
             <div className="mdl-card__title book-list__title">
@@ -107,9 +110,14 @@ export const bookListSize = 10;
 export class BookListComponent extends React.Component {
 
   loadMoreItems() {
+    const first = this.props.relay.variables.first + bookListSize;
     this.props.relay.setVariables({
-      first: this.props.relay.variables.first + bookListSize
-    })
+      first: first
+    });
+    const browserHistory = window.history;
+    browserHistory.replaceState({first: first}, {
+      ...this.props.location, 
+    });
   }
 
   renderList() {
@@ -146,7 +154,7 @@ export class BookListComponent extends React.Component {
 }
 
 
-export default Relay.createContainer(BookListComponent, {
+export default Relay.createContainer(withRouter(BookListComponent), {
   initialVariables: {
     first: bookListSize,
     category: null,

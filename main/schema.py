@@ -12,6 +12,7 @@ from .models import Book, Category, Folder
 
 log = logging.getLogger(__name__)
 
+
 class FolderNode(DjangoNode):
 
     full_url = graphene.String()
@@ -23,6 +24,7 @@ class FolderNode(DjangoNode):
 class CategoryFacet(graphene.ObjectType):
     category = graphene.Field(graphene.LazyType(lambda _: CategoryNode))
     books_count = graphene.Int()
+
 
 class CategoryNode(DjangoNode):
 
@@ -83,8 +85,9 @@ class BookNode(DjangoNode):
         Return scaled thumb by default
         """
         try:
+            self.instance.cover_thumb.file
             return self.instance.cover_thumb.url
-        except ValueError:
+        except FileNotFoundError:
             pass
 
     def resolve_book_cover_full(self, *args):
