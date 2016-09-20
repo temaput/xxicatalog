@@ -7,9 +7,15 @@ import BookPage from './BookPage';
 import SearchBox from './SearchBox.js';
 import CategoriesTree from './CategoriesTree';
 
+import {mqlPhone, mqlTablet} from '../utils/mediaqueries.js';
+import transitions from '../utils/transitions.js';
+import {durations, timings} from '../utils/transitions.js';
+
 class App extends React.Component {
   state = {
     drawerOpen: false,
+    title: this.getTitle(),
+    searchOpen: false,
   }
   handleDrawerToggle = () => {
     this.setState({drawerOpen: !this.state.drawerOpen})
@@ -17,18 +23,67 @@ class App extends React.Component {
   handleDrawerChange = (open, reason) => {
     this.setState({drawerOpen: open})
   }
+  handleSearchToggle = (isOpen) => {
+    this.setState({searchOpen: isOpen})
+  }
+  getTitle() {
+    return "Каталог"
+  }
 
 
   render() {
+    const searchOpen = this.state.searchOpen;
+    const styles = {
+      app: {
+        style: {
+          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.26)',
+          position: 'fixed',
+        },
+        iconStyleRight: {
+          flexBasis: searchOpen ? '340px': '20px',
+          transition: transitions(
+            'flex', durations.searchBox, timings.fastOutSlowIn
+          ),
+        },
+      },
+      main: {
+        paddingTop: 80,
+      },
+    };
+    const stylesPhone = {
+      app: {...styles.app,
+        titleStyle: {
+          flexGrow: searchOpen ? '0': '1',
+          opacity: searchOpen ? '0': '1',
+          transition: transitions(
+            ['flex', 'opacity'],
+            durations.searchBox,
+            timings.fastOutSlowIn
+          ),
+        },
+      },
+    };
+
+    Object.assign(styles, 
+      mqlPhone.matches ? stylesPhone: {},
+    );
+    
+    const searchBox = (
+      <SearchBox 
+        catalog={this.props.catalog}
+        onSearchToggle={this.handleSearchToggle}
+      />
+    );
+
     return (
       <MuiThemeProvider>
         <div className="material-ui">
           <AppBar
-            title="Каталог"
+            title={this.state.title}
             onLeftIconButtonTouchTap={this.handleDrawerToggle}
-          >
-            <SearchBox catalog={this.props.catalog}/>
-          </AppBar>
+            iconElementRight={searchBox}
+            {...styles.app}
+          />
 
         <CategoriesTree
           open={this.state.drawerOpen}
@@ -36,7 +91,8 @@ class App extends React.Component {
           catalog={this.props.catalog}
         />
 
-      {this.props.children}
+      <div style={styles.main}>{this.props.children}</div>
+
 
     </div>
   </MuiThemeProvider>
