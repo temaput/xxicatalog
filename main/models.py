@@ -172,7 +172,11 @@ class Book(models.Model):
     book_description = models.TextField(
         "Аннотация по сайту",
         blank=True
+    )
 
+    book_contents = models.TextField(
+        "Содержание",
+        blank=True
     )
 
     book_cover = models.ImageField(
