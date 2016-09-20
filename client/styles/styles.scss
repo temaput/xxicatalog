@@ -24,7 +24,8 @@ html, body {
 }
 .book-list__header {
   display: flex;
-  align-items: center;
+  flex-flow: column;
+  align-items: stretch;
   justify-content: center;
 }
 
