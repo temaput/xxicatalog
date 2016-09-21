@@ -40,7 +40,7 @@ class App extends React.Component {
           position: 'fixed',
         },
         iconStyleRight: {
-          flexBasis: searchOpen ? '340px': '20px',
+          flexBasis: searchOpen ? '340px': '48px',
           transition: transitions(
             'flex', durations.searchBox, timings.fastOutSlowIn
           ),
