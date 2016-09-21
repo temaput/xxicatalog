@@ -12,9 +12,16 @@ class Book extends React.Component {
   renderHorizontal2() {
     const {bookCover, id, title, subtitle, author} = this.props.bookNode;
     const coverPlaceholder = `http://placehold.it/150x220/?text=${title}`;
+    const styles = {
+      header: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    };
     return (
         <article className="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing mdl-shadow--4dp">
-          <header className="mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--4-col-phone book-list__header">
+          <header className="mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--4-col-phone " style={styles.header}>
             <img className="book-list__cover" 
               src={ bookCover ? bookCover: coverPlaceholder } 
               alt={this.props.bookNode.title}/>
@@ -112,7 +119,7 @@ export class BookListComponent extends React.Component {
   loadMoreItems() {
     const first = this.props.relay.variables.first + bookListSize;
     this.props.router.push({
-      state : {first}
+      state : {first, ignoreScroll: true}
     });
   }
 

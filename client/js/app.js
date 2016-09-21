@@ -19,12 +19,29 @@ import { useScroll } from 'react-router-scroll';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
+function shouldUpdateScroll(prevRouter, currentRouter) {
+  const {routes, location} = currentRouter;
+  if (routes.some(route => route.scrollToTop)) {
+    return [0, 0];
+  } 
+  if (routes.some(route => route.ignoreScroll)) {
+    return false;
+  } 
+  if (
+    prevRouter && location.pathname === prevRouter.location.pathname
+      && location.state && location.state.ignoreScroll
+  ) {
+    return false;
+  }
+
+  return true;
+}
 
 ReactDOM.render(
   <Router
     history={browserHistory}
     routes={routes}
-    render={applyRouterMiddleware(useRelay )}
+    render={applyRouterMiddleware(useRelay, useScroll(shouldUpdateScroll))}
     environment={Relay.Store}
   />,
   document.getElementById('root')

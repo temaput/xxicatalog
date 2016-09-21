@@ -18,19 +18,19 @@ const catalogQuery = {
 };
 
 function prepareBookListParams(params, { location }) {
-    return Object.assign(
-      params,
-      location.state && location.state.first 
-        ? {first: location.state.first}: {}
-    );
-  }
+  return Object.assign(
+    params,
+    location.state && location.state.first 
+      ? {first: location.state.first}: {}
+  );
+}
 
 export default (
   <Route
     path="/"
     component={App}
     queries={catalogQuery}
-    >
+  >
     <IndexRoute
       component={BookList}
       queries={catalogQuery}
@@ -45,16 +45,16 @@ export default (
       queries={catalogQuery}
       prepareParams={prepareBookListParams}
     />
-      <Route
-        path="/books/:category/book-search/:searchText"
-        component={SearchResults}
-        queries={catalogQuery}
-      />
+    <Route
+      path="/books/:category/book-search/:searchText"
+      component={SearchResults}
+      queries={catalogQuery}
+    />
     <Route
       path="/book-page/:bookId"
       component={BookPage}
       queries={catalogQuery}
-      onEnter={() => window.scroll(0,0)}
+      scrollToTop={true}
     />
     <Route
       path="/book-search/:searchText"
