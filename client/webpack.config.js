@@ -12,7 +12,11 @@ const PATHS = {
   app: path.resolve(__dirname, 'js', 'app.js'),
   dev: {filename: 'app.js', path: '/', publicPath: '/'},
   devServerContentBase: path.resolve(__dirname, 'public'),
-  build: {filename: '[name].js', path: path.resolve(__dirname, '../nginx/public')},
+  build: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, '../nginx/public'),
+    publicPath: '/'
+  },
   htmlTemplate: path.resolve(__dirname, 'public/index.ejs'),
 }
 const common = {
