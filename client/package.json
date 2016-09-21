@@ -9,7 +9,7 @@
     "start-outer": "npm run update-schema && webpack-dev-server --port 3000 --host 10.0.0.55",
     "update-schema": "docker-compose run web python manage.py graphql_schema --schema xxicatalog.schema --out xxicatalog/schema.json",
     "build": "webpack",
-    "stats": "webpack --profile --json > stats.json"
+    "stats": "webpack --profile --json > ../var/stats.json"
   },
   "dependencies": {
     "classnames": "2.2.5",
