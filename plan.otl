@@ -2,7 +2,12 @@ TODO
 	[X] Доделать страницу поиска
 	[X] CategoryTree - fix links (dont use hashHistory)
 	[X] Доделать заголовок 
-	[_] Первая страница - hero
+	[_] Добавить яметрику
+	[_] Добавить вывод содержания
+	[_] Добавить тэги
+	[_] Добавить рубрики старого сайта
 	[_] Get rid of babel-pollyfill
 	[_] Get rid of unnecessary mdl sass
+	[_] Первая страница - hero
+	[_] Блочные страницы на базе sir Trevor
 
