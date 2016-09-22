@@ -90,18 +90,20 @@ class SearchResults extends React.Component {
     }
 
     return (
-      <div className="mdl-grid main-content search-results">
-        <div className="search-results__header mdl-cell--4-col">
+      <div className="main-content search-results mdl-grid">
+        <div className="mdl-cell--12-col mdl-grid">
+          <div className="search-results__header mdl-cell mdl-cell--4-col">
 
-          <h5>{this.props.relay.variables.searchText}</h5>
-          <div className="mdl-typography--subhead">
-            {totalBooksCount} изданий
+            <h5>{this.props.relay.variables.searchText}</h5>
+            <div className="mdl-typography--subhead">
+              {totalBooksCount} изданий
+            </div>
+
           </div>
-
-        </div>
-          <div className="search-results__facets mdl-cell--8-col">
+          <div className="search-results__facets mdl-cell mdl-cell--8-col">
             {facetList}
           </div>
+        </div>
         <div className="mdl-grid book-list mdl-cell--12-col">
           {bookList}
           <Waypoint
