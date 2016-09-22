@@ -10,11 +10,11 @@ import CategoriesTree from './CategoriesTree';
 import {mqlPhone, mqlTablet} from '../utils/mediaqueries.js';
 import transitions from '../utils/transitions.js';
 import {durations, timings} from '../utils/transitions.js';
+import typography from '../utils/typograpy.js';
 
 class App extends React.Component {
   state = {
     drawerOpen: false,
-    title: this.getTitle(),
     searchOpen: false,
   }
   handleDrawerToggle = () => {
@@ -27,7 +27,22 @@ class App extends React.Component {
     this.setState({searchOpen: isOpen})
   }
   getTitle() {
+    const routes = this.props.routes;
+    const namedRoute = routes.find(r => r.title !== undefined);
+    if (namedRoute) {
+      return namedRoute.title;
+    }
+    const currentCategoryId = this.props.params.category;
+    const allCategories = this.props.catalog.allCategories;
+    const currentCategory = currentCategoryId && allCategories.find(
+      cat =>  cat.id === currentCategoryId
+    )
+    if (currentCategory) {
+      return currentCategory.title
+    }
+
     return "Каталог"
+
   }
 
 
@@ -53,6 +68,7 @@ class App extends React.Component {
     const stylesPhone = {
       app: {...styles.app,
         titleStyle: {
+          ...typography.styles.subheading,
           flexGrow: searchOpen ? '0': '1',
           opacity: searchOpen ? '0': '1',
           transition: transitions(
@@ -75,11 +91,12 @@ class App extends React.Component {
       />
     );
 
+    const title = this.getTitle();
     return (
       <MuiThemeProvider>
         <div className="material-ui">
           <AppBar
-            title={this.state.title}
+            title={title}
             onLeftIconButtonTouchTap={this.handleDrawerToggle}
             iconElementRight={searchBox}
             {...styles.app}
@@ -106,6 +123,7 @@ export default Relay.createContainer(App, {
     catalog: () => Relay.QL`
     fragment on Catalog {
       rootCategory { id }
+      allCategories { id title }
       ${CategoriesTree.getFragment('catalog')}
       ${BookList.getFragment('catalog')}
       ${BookPage.getFragment('catalog')}

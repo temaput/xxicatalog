@@ -57,11 +57,6 @@ export default (
       prepareParams={prepareBookListParams}
     />
     <Route
-      path="/books/:category/book-search/"
-      component={SearchResults}
-      queries={catalogQuery}
-    />
-    <Route
       path="/book-page/:bookId"
       component={BookPage}
       queries={catalogQuery}
@@ -71,6 +66,7 @@ export default (
       path="/book-search/"
       component={SearchResults}
       queries={catalogQuery}
+      title="Поиск"
       prepareParams={
         (params, routerProps) => {
           return prepareBookSearchParams(

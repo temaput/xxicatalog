@@ -3,16 +3,17 @@ import Relay from 'react-relay';
 import Drawer from 'material-ui/Drawer';
 import {List, ListItem} from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
-import {hashHistory} from 'react-router';
+import {withRouter} from 'react-router';
 
 
 
 class CategoriesTree extends React.Component {
+
   handle(categoryId, hasBooks=true) {
     if (!hasBooks) {
-      hashHistory.push('/');
+      this.props.router.push('/');
     } else {
-      hashHistory.push('/books/'+categoryId);
+      this.props.router.push('/books/'+categoryId);
     }
     this.props.onChange(false);
   }
@@ -63,7 +64,7 @@ class CategoriesTree extends React.Component {
 }
 
 
-export default Relay.createContainer(CategoriesTree, {
+export default Relay.createContainer(withRouter(CategoriesTree), {
   fragments: {
     catalog: () => Relay.QL`
       fragment on Catalog {

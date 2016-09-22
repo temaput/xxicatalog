@@ -126,6 +126,7 @@ class Catalog(graphene.relay.Node):
     Dummy root-node class
     """
     all_books = DjangoFilterConnectionField(BookNode)
+    all_categories = graphene.List(CategoryNode)
     bookNode = graphene.relay.NodeField(BookNode)
     root_category = graphene.Field(CategoryNode)
     search_results = graphene.Field(
@@ -138,6 +139,9 @@ class Catalog(graphene.relay.Node):
         search_text=graphene.String().NonNull
     )
     id = None
+
+    def resolve_all_categories(self, args, info):
+        return [CategoryNode(c) for c in Category.objects.all()]
 
     def resolve_search_suggestion(self, args, info):
         search_text = args.get('search_text')
