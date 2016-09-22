@@ -25,6 +25,15 @@ function prepareBookListParams(params, { location }) {
   );
 }
 
+function prepareBookSearchParams(params, {location}) {
+  return Object.assign(
+    {},
+    params, 
+    location.search ? {searchText: location.query.search}: {}
+  );
+}
+
+
 export default (
   <Route
     path="/"
@@ -57,9 +66,17 @@ export default (
       scrollToTop={true}
     />
     <Route
-      path="/book-search/:searchText"
+      path="/book-search/"
       component={SearchResults}
       queries={catalogQuery}
+      prepareParams={
+        (params, routerProps) => {
+          return prepareBookSearchParams(
+            prepareBookListParams(params, routerProps),
+            routerProps
+          )
+        }
+      }
     />
   </Route>
 );

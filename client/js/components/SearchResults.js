@@ -1,12 +1,23 @@
 import React from 'react';
 import Relay from 'react-relay';
+import classNames from 'classnames';
+import Waypoint from 'react-waypoint';
 import {BookContainer, bookListSize, BookListComponent} from './BookList';
+import {withRouter} from 'react-router';
 import {
   Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
 } from 'material-ui/Table';
+import Typography from '../utils/Typograpy.js';
 
 
-class SearchResults extends BookListComponent {
+class SearchResults extends React.Component {
+  loadMoreItems() {
+    const first = this.props.relay.variables.first + bookListSize;
+    this.props.router.push({
+      ...this.props.location,
+      state : {first, ignoreScroll: true}
+    });
+  }
   renderList() {
     const books = this.props.catalog.searchResults.books.edges;
     const bookList = books.map(
@@ -14,9 +25,18 @@ class SearchResults extends BookListComponent {
         <BookContainer 
           bookNode={book.node} 
           key={book.node.id} 
-          />
+        />
       )
     ); 
+    return  (
+      <div className="search-results">
+        {bookList}
+      </div>
+    )
+  }
+
+  render() {
+    const books = this.props.catalog.searchResults.books.edges;
     const facets = (this.props.catalog.searchResults.facets.map(
       (f) => (
         <TableRow key={f.category.id}>
@@ -29,32 +49,46 @@ class SearchResults extends BookListComponent {
 
     const header = (
       <div className="search-results__header">
-        <h2>{this.props.relay.variables.searchText}</h2>
+        <h5>{this.props.relay.variables.searchText}</h5>
         <div className="mdl-typography--subhead">
           {books.length} изданий
         </div>
-        
+
         <div className="search-results__facets">
-          <Table><TableBody>{facets}</TableBody></Table>
+          <Table
+          >
+            <TableBody
+              displayRowCheckbox={false}
+            >
+              {facets}
+            </TableBody>
+          </Table>
         </div>
 
       </div>
     );
-    return  (
-      <div className="search-results">
+    const bookListClass = classNames(
+      'main-content', 'book-list', 'mdl-grid'
+    );
+    return (
+      <div className={bookListClass}>
         {header}
-        {bookList}
+        {this.renderList()}
+        <Waypoint
+          onEnter={this.loadMoreItems.bind(this)}
+          bottomOffset={-20}
+        />
       </div>
     )
   }
 }
 
 
-export default Relay.createContainer(SearchResults, {
+export default Relay.createContainer(withRouter(SearchResults), {
   initialVariables: {
     searchText: null,
     category: null,
-    first: 300,
+    first: 10,
   },
 
   fragments: {

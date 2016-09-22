@@ -119,6 +119,7 @@ export class BookListComponent extends React.Component {
   loadMoreItems() {
     const first = this.props.relay.variables.first + bookListSize;
     this.props.router.push({
+      ...this.props.location,
       state : {first, ignoreScroll: true}
     });
   }

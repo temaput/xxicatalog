@@ -5,7 +5,7 @@
   "repository": "temaput/xxicatalog",
   "version": "0.1.0",
   "scripts": {
-    "start": "npm run update-schema && webpack-dev-server --port 3000",
+    "start": "npm run update-schema && webpack-dev-server --hot --inline --port 3000",
     "start-outer": "npm run update-schema && webpack-dev-server --port 3000 --host 10.0.0.55",
     "update-schema": "docker-compose run web python manage.py graphql_schema --schema xxicatalog.schema --out xxicatalog/schema.json",
     "build": "webpack",

@@ -3,17 +3,13 @@ import Relay from 'react-relay';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import AutoComplete from 'material-ui/AutoComplete';
-import {hashHistory} from 'react-router';
+import {withRouter} from 'react-router';
 import FontIcon from 'material-ui/FontIcon';
 
 import transitions from '../utils/transitions.js';
 import {timings, durations} from '../utils/transitions.js';
 
 class SearchBox extends React.Component {
-
-  static contextTypes = {
-    router: React.PropTypes.object
-  }
 
   state = {
     isOpened: false
@@ -36,8 +32,10 @@ class SearchBox extends React.Component {
   }
 
   onNewRequest(chosenRequest, index) {
-    this.context.router.push(`/book-search/${chosenRequest}`)
-
+    this.props.router.push({
+      pathname: '/book-search/',
+      query: {search: chosenRequest}
+    })
   }
 
 
@@ -46,6 +44,7 @@ class SearchBox extends React.Component {
   }
 
   onSearchToggle(e) {
+    e.preventDefault();
     const isOpened = !this.state.isOpened;
     this.setState({isOpened});
     this.field.focus();
@@ -99,16 +98,16 @@ class SearchBox extends React.Component {
       },
     };
     return (
-      <form name="search-box" style={styles.searchBox}>
+      <div style={styles.searchBox}>
               
         <a onClick={this.onSearchToggle.bind(this)} 
           href="#" style={styles.searchButton}>
           <FontIcon 
-              className="material-icons"
-              color="white"
-            >
-              search
-            </FontIcon>
+            className="material-icons"
+            color="white"
+          >
+            search
+          </FontIcon>
         </a>
         <div className="search-box__input" style={styles.inputContainer}>
           <AutoComplete
@@ -132,13 +131,13 @@ class SearchBox extends React.Component {
               close
             </FontIcon>
         </div>
-      </form>
+      </div>
     )
   }
 
 }
 
-export default Relay.createContainer(SearchBox, {
+export default Relay.createContainer(withRouter(SearchBox), {
   initialVariables: {
     searchText: "",
   },

@@ -56,14 +56,21 @@ const dev = {
   },
   
   devServer: {
+
+    // Enable history API fallback so HTML5 History API based
+    // routing works. This is a good default that will come
+    // in handy in more complicated setups.
+    historyApiFallback: true,
+
     proxy: {
       '/graphql': 'http://localhost:8000',
       '/media': 'http://localhost:8000',
       '/static': 'http://localhost:8000',
     },
     publicPath: '/',
-    stats: {colors: true},
-    noInfo: true
+    // Display only errors to reduce the amount of output.
+    stats: 'errors-only',
+    //noInfo: true
   },
 };
 

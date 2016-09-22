@@ -1,0 +1,8 @@
+TODO
+	[_] Доделать страницу поиска
+	[_] CategoryTree - fix links (dont use hashHistory)
+	[_] Доделать заголовок 
+	[_] Первая страница - hero
+	[_] Get rid of babel-pollyfill
+	[_] Get rid of unnecessary mdl sass
+
