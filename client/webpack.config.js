@@ -10,10 +10,10 @@ const parts = require('./build/parts.js');
 
 const PATHS = {
   app: path.resolve(__dirname, 'js', 'app.js'),
-  dev: {filename: 'app.js', path: '/', publicPath: '/'},
+  dev: {filename: '[name].js', path: '/', publicPath: '/'},
   devServerContentBase: path.resolve(__dirname, 'public'),
   build: {
-    filename: '[name].js',
+    filename: '[name].[hash].js',
     path: path.resolve(__dirname, '../nginx/public'),
     publicPath: '/'
   },
@@ -92,7 +92,8 @@ switch(process.env.npm_lifecycle_event) {
       }),
       */
       parts.minify(),
-      parts.extractStyles()
+      parts.extractStyles(),
+      parts.zipAssets()
     );
     break;
   default:

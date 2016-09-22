@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 
 
@@ -53,7 +54,21 @@ return {
     },
     plugins: [
       // Output extracted CSS to a file
-      new ExtractTextPlugin('[name].css')
+      new ExtractTextPlugin('[name].[hash].css')
     ]
   };
+}
+
+exports.zipAssets = function(threshold, minRatio) {
+  return {
+    plugins: [
+      new CompressionPlugin({
+        asset: "[path].gz[query]",
+        algorithm: "gzip",
+        test: /\.js$|\.html$|\.css$/,
+        threshold: threshold,
+        minRatio: minRatio,
+      })
+    ]
+  }
 }

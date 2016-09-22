@@ -8,7 +8,7 @@
     "start": "npm run update-schema && webpack-dev-server --hot --inline --port 3000",
     "start-outer": "npm run update-schema && webpack-dev-server --port 3000 --host 10.0.0.55",
     "update-schema": "docker-compose run web python manage.py graphql_schema --schema xxicatalog.schema --out xxicatalog/schema.json",
-    "build": "webpack",
+    "build": "rm -Rf ../nginx/public && npm run update-schema && webpack",
     "stats": "webpack --profile --json > ../var/stats.json"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-relay-plugin": "0.9.2",
+    "compression-webpack-plugin": "^0.3.1",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
