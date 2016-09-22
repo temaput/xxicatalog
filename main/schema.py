@@ -134,10 +134,10 @@ class Catalog(graphene.relay.Node):
         search_text=graphene.String().NonNull,
         categories=graphene.String(),
     )
-    search_suggestion = graphene.Field(
-        SearchSuggestion,
-        search_text=graphene.String().NonNull
-    )
+    # search_suggestion = graphene.Field(
+    #     SearchSuggestion,
+    #     search_text=graphene.String().NonNull
+    # )
     id = None
 
     def resolve_all_categories(self, args, info):

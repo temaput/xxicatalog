@@ -1,5 +1,5 @@
 import React from 'react';
-import Relay from 'react-relay';
+//import Relay from 'react-relay';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -17,18 +17,23 @@ class SearchBox extends React.Component {
 
   prepareData() {
 
+    /*
     const {
       suggestions, authors, categories, books
     } = this.props.catalog.searchSuggestion;
 
     return Array.prototype.concat(suggestions, authors)
+    */
+    return [];
 
   }
 
   onUpdateInput(searchText) {
+    /*
     this.props.relay.setVariables(
       {searchText}
     );
+    */
   }
 
   onNewRequest(chosenRequest, index) {
@@ -137,6 +142,8 @@ class SearchBox extends React.Component {
 
 }
 
+export default withRouter(SearchBox);
+  /*
 export default Relay.createContainer(withRouter(SearchBox), {
   initialVariables: {
     searchText: "",
@@ -159,3 +166,4 @@ export default Relay.createContainer(withRouter(SearchBox), {
     `,
   },
 });
+*/

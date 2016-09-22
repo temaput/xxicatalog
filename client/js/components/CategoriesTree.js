@@ -4,6 +4,9 @@ import Drawer from 'material-ui/Drawer';
 import {List, ListItem} from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
 import {withRouter} from 'react-router';
+import {mqlPhone, mqlTablet} from '../utils/mediaqueries.js';
+
+import {grey300} from '../utils/colors.js';
 
 
 
@@ -44,17 +47,26 @@ class CategoriesTree extends React.Component {
 }
 
   render() {
+    const styles = {
+      topMenuItem: {
+        borderBottom: '1px solid',
+        borderBottomColor: grey300,
+        height: 64,
+      },
+    };
+
     const list = this.renderList();
     const handleRootClick = () => {
       this.handle(this.props.catalog.rootCategory.id, false);
     }
     return (
       <Drawer 
-        docked={false}
+        docked={mqlPhone.matches ? false: true}
         open={this.props.open}
         onRequestChange={this.props.onChange}
       >
-        <MenuItem onTouchTap={handleRootClick}>Каталог</MenuItem>
+        <MenuItem style={styles.topMenuItem} 
+          onTouchTap={handleRootClick}>Каталог</MenuItem>
         <List>
           {list}
         </List>

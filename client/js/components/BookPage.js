@@ -59,7 +59,7 @@ class BookPage extends React.Component {
 
     const contents = (
       <div 
-        className="book-page__contents" 
+        className="book-page__contents mdl-cell mdl-cell--12-col" 
         style={styles.contents} >
         <h5>Содержание</h5>
         <div 
@@ -75,8 +75,8 @@ class BookPage extends React.Component {
           <div className="book-page__breadcrumbs">
             {breadcrumbs}
           </div>
-          <div className="mdl-grid mdl-cell--12-col">
-            <header className="mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone" style={styles.header}>
+          <div className="mdl-grid">
+            <header className="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone" style={styles.header}>
               <div style={styles.coverContainer}><img src={book.bookCover} alt={book.title}/></div>
               <div className="mdl-card__title">
                 <h1 className="mdl-typography--headline mdl-typography--text-center">
@@ -89,7 +89,7 @@ class BookPage extends React.Component {
                   label="Купить" primary={true}/>
               </div>
             </header>
-            <div className="mdl-cell--10-col mdl-card__title book-list__title">
+            <div className="mdl-cell mdl-cell--10-col mdl-cell--2-col-tablet mdl-card__title book-list__title">
               <div className="mdl-typography--font-light mdl-typography--subhead">
                 {book.author}
               </div>
@@ -110,8 +110,7 @@ class BookPage extends React.Component {
               >
               </div>
             </div>
-
-        {book.bookContents ? contents: ""}
+            {book.bookContents ? contents: ""}
           </div>
         </div>
       </div>

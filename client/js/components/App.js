@@ -14,14 +14,14 @@ import typography from '../utils/typograpy.js';
 
 class App extends React.Component {
   state = {
-    drawerOpen: false,
+    drawerOpen: mqlPhone.matches ? false: true,
     searchOpen: false,
   }
   handleDrawerToggle = () => {
     this.setState({drawerOpen: !this.state.drawerOpen})
   }
   handleDrawerChange = (open, reason) => {
-    this.setState({drawerOpen: open})
+    mqlPhone.matches && this.setState({drawerOpen: open})
   }
   handleSearchToggle = (isOpen) => {
     this.setState({searchOpen: isOpen})
@@ -48,11 +48,15 @@ class App extends React.Component {
 
   render() {
     const searchOpen = this.state.searchOpen;
+    const drawerOpen = this.state.drawerOpen;
     const styles = {
       app: {
         style: {
           boxShadow: '0 2px 5px rgba(0, 0, 0, 0.26)',
           position: 'fixed',
+        },
+        iconStyleLeft: {
+          marginLeft: drawerOpen ? 240: -16,
         },
         iconStyleRight: {
           flexBasis: searchOpen ? '340px': '48px',
@@ -63,6 +67,7 @@ class App extends React.Component {
       },
       main: {
         paddingTop: 80,
+        marginLeft: !mqlPhone.matches && drawerOpen ? 256: 0,
       },
     };
     const stylesPhone = {
@@ -127,7 +132,6 @@ export default Relay.createContainer(App, {
       ${CategoriesTree.getFragment('catalog')}
       ${BookList.getFragment('catalog')}
       ${BookPage.getFragment('catalog')}
-      ${SearchBox.getFragment('catalog')}
     }
     `,
   }
