@@ -3,9 +3,33 @@ import Relay from 'react-relay';
 import classNames from 'classnames';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router';
+import {grey300} from '../utils/colors.js';
+import typography from '../utils/typograpy.js';
+
 
 class BookPage extends React.Component {
   render() {
+    const styles = {
+      contents: {
+        borderTop: '1px solid',
+        borderTopColor: grey300,
+        ...typography.styles.body1,
+        fontWeight: typography.fontWeightLight,
+        padding: 8,
+        width: '100%',
+      },
+      coverContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+      },
+      header: {
+        display: 'flex',
+        flexFlow: 'column',
+        alignItems: 'stretch',
+        paddingTop: 16,
+      },
+    };
+
     const pageClass = classNames(
       'mdl-grid', 'main-content',
     )
@@ -33,6 +57,18 @@ class BookPage extends React.Component {
       )
     );
 
+    const contents = (
+      <div 
+        className="book-page__contents" 
+        style={styles.contents} >
+        <h5>Содержание</h5>
+        <div 
+          className="rich-text__container"
+          dangerouslySetInnerHTML={{__html: book.bookContents}}>
+        </div>
+      </div>
+    )
+
     return (
       <div className={pageClass}>
         <div className="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
@@ -40,8 +76,8 @@ class BookPage extends React.Component {
             {breadcrumbs}
           </div>
           <div className="mdl-grid mdl-cell--12-col">
-            <header className="mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone book-list__header ">
-              <img className="book-list__cover" src={book.bookCover} alt={book.title}/>
+            <header className="mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone" style={styles.header}>
+              <div style={styles.coverContainer}><img src={book.bookCover} alt={book.title}/></div>
               <div className="mdl-card__title">
                 <h1 className="mdl-typography--headline mdl-typography--text-center">
                   {book.price} руб.
@@ -63,10 +99,10 @@ class BookPage extends React.Component {
               </div>
               <p>&nbsp;</p>
 
-            <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">
-              {book.bookFormat ? book.bookFormat: book.bookEdition}<br/>
-              код {book.article}
-            </p>
+              <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">
+                {book.bookFormat ? book.bookFormat: book.bookEdition}<br/>
+                код {book.article}
+              </p>
               <p>&nbsp;</p>
               <div 
                 className="mdl-typography--body-1-color-contrast mdl-typography--font-light book-page__annotation rich-text__container"
@@ -74,6 +110,8 @@ class BookPage extends React.Component {
               >
               </div>
             </div>
+
+        {book.bookContents ? contents: ""}
           </div>
         </div>
       </div>
@@ -104,6 +142,7 @@ export default Relay.createContainer(BookPage, {
         bookEdition,
         bookFormat,
         bookDescription,
+        bookContents,
         price,
         article,
         fullUrl,
