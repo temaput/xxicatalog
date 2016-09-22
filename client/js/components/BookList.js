@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Waypoint from 'react-waypoint';
 import {Link} from 'react-router';
 import {withRouter} from 'react-router';
+import {bookListSize} from '../utils/constants.js';
 
 
 
@@ -112,7 +113,6 @@ export const BookContainer = Relay.createContainer(Book, {
   },
 });
 
-export const bookListSize = 10;
 
 export class BookListComponent extends React.Component {
 

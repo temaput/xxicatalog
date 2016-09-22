@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import Relay from 'react-relay';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import styles from '../styles/styles.scss';
+import extraStyles from '../styles/extra-styles.scss';
 
 
 import Router from 'react-router/lib/Router';

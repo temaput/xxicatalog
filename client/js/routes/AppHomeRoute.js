@@ -29,7 +29,9 @@ function prepareBookSearchParams(params, {location}) {
   return Object.assign(
     {},
     params, 
-    location.search ? {searchText: location.query.search}: {}
+    location.search ? {searchText: location.query.search}: {},
+    location.query.category ? {category: location.query.category}:
+      {category: null}
   );
 }
 
@@ -55,7 +57,7 @@ export default (
       prepareParams={prepareBookListParams}
     />
     <Route
-      path="/books/:category/book-search/:searchText"
+      path="/books/:category/book-search/"
       component={SearchResults}
       queries={catalogQuery}
     />

@@ -118,6 +118,7 @@ class SearchResults(graphene.ObjectType):
     books = graphene.relay.ConnectionField(BookNode)
     root_category = graphene.Field(CategoryNode)
     facets = graphene.List(CategoryFacet)
+    totalBooksCount = graphene.Int()
 
 
 class Catalog(graphene.relay.Node):
@@ -180,6 +181,7 @@ class Catalog(graphene.relay.Node):
     def resolve_search_results(self, args, info):
         search_text = args.get('search_text')
         qs = Book.full_text_search.ranked_search(search_text)
+        totalBooksCount = qs.count()
         categories = args.get('categories', None)
         if categories is not None:
             qs = qs.filter(categories=from_global_id(categories)[1])
@@ -203,7 +205,8 @@ class Catalog(graphene.relay.Node):
         return SearchResults(
             books=books,
             root_category=root_category,
-            facets=facets_node
+            facets=facets_node,
+            totalBooksCount=totalBooksCount
         )
 
     def resolve_root_category(self, *args):
