@@ -88,7 +88,7 @@ class App extends React.Component {
     Object.assign(styles, 
       mqlPhone.matches ? stylesPhone: {},
     );
-    
+
     const searchBox = (
       <SearchBox 
         catalog={this.props.catalog}
@@ -106,18 +106,14 @@ class App extends React.Component {
             iconElementRight={searchBox}
             {...styles.app}
           />
-
-        <CategoriesTree
-          open={this.state.drawerOpen}
-          onChange={this.handleDrawerChange}
-          catalog={this.props.catalog}
-        />
-
-      <div style={styles.main}>{this.props.children}</div>
-
-
-    </div>
-  </MuiThemeProvider>
+          <CategoriesTree
+            open={this.state.drawerOpen}
+            onChange={this.handleDrawerChange}
+            catalog={this.props.catalog}
+          />
+          <div style={styles.main}>{this.props.children}</div>
+        </div>
+      </MuiThemeProvider>
     )
   }
 }
