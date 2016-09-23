@@ -34,6 +34,7 @@ class Book extends React.Component {
         paddingTop: 12,
         paddingLeft: vertical ? 'inherit': 12,
         paddingBottom: 12,
+        paddingRight: 6,
         flexGrow: 1,
       },
       author: {
