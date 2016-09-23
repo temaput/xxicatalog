@@ -76,7 +76,7 @@ class BookPage extends React.Component {
             {breadcrumbs}
           </div>
           <div className="mdl-grid">
-            <header className="mdl-cell mdl-cell--2-col mdl-cell--3-col-tablet mdl-cell--4-col-phone" style={styles.header}>
+            <header className="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone" style={styles.header}>
               <div style={styles.coverContainer}>
                 <img style={styles.coverImg} src={book.bookCover} alt={book.title}/>
               </div>
@@ -91,7 +91,7 @@ class BookPage extends React.Component {
                   label="Купить" primary={true}/>
               </div>
             </header>
-            <div className="mdl-cell mdl-cell--10-col mdl-cell--5-col-tablet mdl-card__title book-list__title">
+            <div className="mdl-cell mdl-cell--9-col mdl-cell--5-col-tablet mdl-card__title book-list__title">
               <div className="mdl-typography--font-light mdl-typography--subhead">
                 {book.author}
               </div>
