@@ -56,7 +56,7 @@ class App extends React.Component {
           position: 'fixed',
         },
         iconStyleLeft: {
-          marginLeft: drawerOpen ? 240: -16,
+          marginLeft: !mqlPhone.matches && drawerOpen ? 240: -16,
         },
         iconStyleRight: {
           flexBasis: searchOpen ? '340px': '48px',

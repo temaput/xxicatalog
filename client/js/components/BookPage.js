@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router';
 import {grey300} from '../utils/colors.js';
 import typography from '../utils/typograpy.js';
+import {mqlPhone, mqlTablet} from '../utils/mediaqueries.js';
 
 
 class BookPage extends React.Component {
@@ -19,8 +20,10 @@ class BookPage extends React.Component {
         width: '100%',
       },
       coverContainer: {
-        display: 'flex',
-        justifyContent: 'center',
+        textAlign: 'center',
+      },
+      coverImg: {
+        maxWidth: mqlPhone.matches ? '50%': '100%',
       },
       header: {
         display: 'flex',
@@ -77,7 +80,9 @@ class BookPage extends React.Component {
           </div>
           <div className="mdl-grid">
             <header className="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--4-col-phone" style={styles.header}>
-              <div style={styles.coverContainer}><img src={book.bookCover} alt={book.title}/></div>
+              <div style={styles.coverContainer}>
+                <img style={styles.coverImg} src={book.bookCover} alt={book.title}/>
+              </div>
               <div className="mdl-card__title">
                 <h1 className="mdl-typography--headline mdl-typography--text-center">
                   {book.price} руб.

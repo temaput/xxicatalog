@@ -6,9 +6,11 @@ import {
     fullWhite,
     darkWhite,
     lightWhite,
+    cyan500,
+    indigo500,
 } from './colors';
 
-export default {
+const typography = {
   styles: {
     display4:  {
       fontSize: 112,
@@ -54,6 +56,22 @@ export default {
       fontSize: 12,
       fontWeight: 400
     },
+    bookListTitle: {
+      fontSize: 15,
+      fontWeight: 500,
+      lineHeight: 'normal',
+      color: indigo500,
+      textDecoration: 'none',
+    },
+    bookListAuthor: {
+      fontSize: 14,
+      fontWeight: 300,
+    },
+    bookListSubtitle: {
+      fontSize: 14,
+      fontWeight: 300,
+    }
+
   },
 
   // text colors
@@ -73,3 +91,5 @@ export default {
   fontStyleButtonFontSize: 14,
 
 }
+
+export default typography;

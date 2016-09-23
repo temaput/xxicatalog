@@ -5,96 +5,90 @@ import Waypoint from 'react-waypoint';
 import {Link} from 'react-router';
 import {withRouter} from 'react-router';
 import {bookListSize} from '../utils/constants.js';
+import typography from '../utils/typograpy.js';
 
 
 
 class Book extends React.Component {
 
-  renderHorizontal2() {
-    const {bookCover, id, title, subtitle, author} = this.props.bookNode;
-    const coverPlaceholder = `http://placehold.it/150x220/?text=${title}`;
+  renderBookNode(vertical=false) {
+    const {
+      bookCover, id, title, subtitle, author, price, article
+    } = this.props.bookNode;
+
     const styles = {
-      header: {
+      article: {
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: vertical ? 'column': 'row',
+        flexWrap: 'nowrap',
+      },
+      coverImg: {
+        width: '100%',
+      },
+      coverContainer: {
+        margin: 'auto',
+        width: 110,
+        flexShrink: 0,
+      },
+      header: {
+        paddingTop: 12,
+        paddingLeft: vertical ? 'inherit': 12,
+        paddingBottom: 12,
+        flexGrow: 1,
+      },
+      author: {
+        ...typography.styles.bookListAuthor,
+      },
+      title: {
+        ...typography.styles.bookListTitle,
+      },
+      subtitle: {
+        ...typography.styles.bookListSubtitle,
+        paddingBottom: 12,
+      },
+      price: {
+        ...typography.styles.bookListAuthor,
+        paddingTop: 12,
+        fontWeight: typography.fontWeightMedium,
       },
     };
+    const coverPlaceholder = `http://placehold.it/150x220/?text=${title}`;
+    const subtitleNode = (
+      <div style={styles.subtitle}>
+        {subtitle}
+      </div>
+    )
     return (
-        <article className="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing mdl-shadow--4dp">
-          <header className="mdl-cell--3-col mdl-cell--2-col-tablet mdl-cell--4-col-phone " style={styles.header}>
-            <img className="book-list__cover" 
-              src={ bookCover ? bookCover: coverPlaceholder } 
-              alt={this.props.bookNode.title}/>
-          </header>
-          <div className="mdl-card mdl-cell--9-col mdl-cell--6-col-tablet">
-            <div className="mdl-card__title book-list__title">
-              <div className="mdl-typography--font-light mdl-typography--subhead">
-                {this.props.bookNode.author}
-              </div>
-              <div className="mdl-card__title-text book-list__title-text">{this.props.bookNode.title}</div>
-              <div className="mdl-card__subtitle-text mdl-typography--font-light mdl-typography--subhead">
-                {this.props.bookNode.subtitle}
-              </div>
-            </div>
-            <div className="mdl-card__actions mdl-card--border">
+        <article className="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-shadow--4dp" style={styles.article}>
+          <div style={styles.coverContainer}>
+            <Link 
+              to={"/book-page/" + this.props.bookNode.id}
+            >
+              <img style={styles.coverImg}
+                src={ bookCover ? bookCover: coverPlaceholder } 
+                alt={this.props.bookNode.title}/>
+            </Link>
+          </div>
+          <div style={styles.header}>
+            <div>
               <Link 
                 to={"/book-page/" + this.props.bookNode.id}
-                className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-                Подробнее
+                style={styles.title}>
+                {title}
               </Link>
             </div>
+            {subtitle ? subtitleNode: ""}
+            <div style={styles.author}>
+              {this.props.bookNode.author}
+            </div>
+            <div style={styles.price}>{price} ₽ </div>
           </div>
         </article>
     );
   }
-  renderHorizontal() {
-    return (
-      <div className="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--8-col-tablet">
 
-        <div className="horizontal-card mdl-shadow--4dp">
-
-          <div className="horizontal-card__row">
-            <div className="horizontal-card__media">
-              <img src={this.props.bookNode.bookCover} alt={this.props.bookNode.title}/>
-            </div>
-
-            <div className="horizontal-card__title">
-              <div className="mdl-typography--font-light mdl-typography--subhead">
-                {this.props.bookNode.author}
-              </div>
-              <div className="horizontal-card__title-text">{this.props.bookNode.title}</div>
-              <div className="mdl-typography--font-light mdl-typography--subhead">
-                {this.props.bookNode.subtitle}
-              </div>
-          <div className="mdl-card__actions mdl-card--border">
-            <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-              Подробнее
-            </a>
-          </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    );
-  }
-
-  renderVertical() {
-    return (
-      <div className="mdl-cell mdl-card mdl-shadow--4dp">
-        <div className="mdl-card__media">
-          <img src={this.props.bookNode.bookCover} alt={this.props.bookNode.title}/>
-        </div>
-        <div className="mdl-card__title">
-          <div className="mdl-card__title-text">{this.props.bookNode.title}</div>
-        </div>
-      </div>
-    );
-  }
   render() {
-    return this.renderHorizontal2()
+    return this.renderBookNode()
   }
 }
 
@@ -107,7 +101,8 @@ export const BookContainer = Relay.createContainer(Book, {
         author,
         title,
         subtitle,
-        price
+        price,
+        article
       }
     `,
   },
