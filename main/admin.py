@@ -1,14 +1,16 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from treebeard_admin.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
+
 
 # Register your models here.
 from .models import Book, Category
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    filter_horizontal = ('books',)
-    fields = ('title',)
+class CategoryAdmin(TreeAdmin):
+    form = movenodeform_factory(Category)
 
 
 @admin.register(Book)

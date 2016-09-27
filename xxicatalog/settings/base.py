@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'graphene.contrib.django',
     'imagekit',
+    'treebeard_admin',
     'main',
 
 ]
